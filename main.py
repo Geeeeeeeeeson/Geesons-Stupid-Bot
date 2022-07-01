@@ -152,58 +152,58 @@ signal.signal(signal.SIGINT, terminate_handler)
 '''
 
 
-with open('money', 'r') as f:
+with open('files/money', 'r') as f:
     coins = ast.literal_eval(f.read())
 
-with open('bank_level', 'r') as f:
+with open('files/bank_level', 'r') as f:
     bank = ast.literal_eval(f.read())
 
-with open('debt', 'r') as f:
+with open('files/debt', 'r') as f:
     debt = ast.literal_eval(f.read())
 
-with open('antidelete', 'r') as f:
+with open('files/antidelete', 'r') as f:
     antidelete = ast.literal_eval(f.read())
 
-with open('admin_bot', 'r') as f:
+with open('files/admin_bot', 'r') as f:
     admin = ast.literal_eval(f.read())
 
-with open('botban', 'r') as f:
+with open('files/botban', 'r') as f:
     banned = ast.literal_eval(f.read())
 
-with open('gw', 'r', encoding='utf-8') as f:
+with open('files/gw', 'r', encoding='utf-8') as f:
     gw2 = eval(f.read())
 
-with open('work_timestamps', 'r') as f:
+with open('files/work_timestamps', 'r') as f:
     work = ast.literal_eval(f.read())
 
-with open('users_jobs', 'r') as f:
+with open('files/users_jobs', 'r') as f:
     job = ast.literal_eval(f.read())
 
-with open('quit_job_timestamps', 'r') as f:
+with open('files/quit_job_timestamps', 'r') as f:
     quit = ast.literal_eval(f.read())
 
-with open('salary_per_user', 'r') as f:
+with open('files/salary_per_user', 'r') as f:
     salary = ast.literal_eval(f.read())
 
-with open('daily', 'r') as f:
+with open('files/daily', 'r') as f:
     daily = ast.literal_eval(f.read())
 
-with open('weekly', 'r') as f:
+with open('files/weekly', 'r') as f:
     weekly = ast.literal_eval(f.read())
 
-with open('inv', 'r') as f:
+with open('files/inv', 'r') as f:
     inv = ast.literal_eval(f.read())
 
-with open('guildconfig', 'r', encoding='utf-8') as f:
+with open('files/guildconfig', 'r', encoding='utf-8') as f:
     config = ast.literal_eval(f.read())
 
-with open('badge', 'r') as f:
+with open('files/badge', 'r') as f:
     badgee = ast.literal_eval(f.read())
 
-with open('userconfig', 'r') as f:
+with open('files/userconfig', 'r') as f:
     userconfig = ast.literal_eval(f.read())
 
-with open('xp','r') as f:
+with open('files/xp','r') as f:
     xp = ast.literal_eval(f.read())
 
 
@@ -294,41 +294,41 @@ def setdebt(user, debtt=None, debtday=None):
     debt[user] = [debtt, debtday]
     
 def save_all():
-    with open('money', 'w') as f:
+    with open('files/money', 'w') as f:
         f.write(repr(coins))
-    with open('work_timestamps', 'w') as f:
+    with open('files/work_timestamps', 'w') as f:
         f.write(repr(work))
-    with open('users_jobs', 'w') as f:
+    with open('files/users_jobs', 'w') as f:
         f.write(repr(job))
-    with open('quit_job_timestamps', 'w') as f:
+    with open('files/quit_job_timestamps', 'w') as f:
         f.write(repr(quit))
-    with open('salary_per_user', 'w') as f:
+    with open('files/salary_per_user', 'w') as f:
         f.write(repr(salary))
-    with open('xp', 'w') as f:
+    with open('files/xp', 'w') as f:
         f.write(repr(xp))
-    with open('weekly', 'w') as f:
+    with open('files/weekly', 'w') as f:
         f.write(repr(weekly))
-    with open('daily', 'w') as f:
+    with open('files/daily', 'w') as f:
         f.write(repr(daily))
-    with open('bank_level', 'w') as f:
+    with open('files/bank_level', 'w') as f:
         f.write(repr(bank))
-    with open('debt', 'w') as f:
+    with open('files/debt', 'w') as f:
         f.write(repr(debt))
-    with open('admin_bot', 'w') as f:
+    with open('files/admin_bot', 'w') as f:
         f.write(repr(admin))
-    with open('inv', 'w') as f:
+    with open('files/inv', 'w') as f:
         f.write(repr(inv))
-    with open('antidelete', 'w') as f:
+    with open('files/antidelete', 'w') as f:
         f.write(repr(antidelete))
-    with open('botban', 'w') as f:
+    with open('files/botban', 'w') as f:
         f.write(repr(banned))
-    with open('guildconfig', 'w', encoding='utf-8') as f:
+    with open('files/guildconfig', 'w', encoding='utf-8') as f:
         f.write(repr(config))
-    with open('badge', 'w') as f:
+    with open('files/badge', 'w') as f:
         f.write(repr(badgee))
-    with open('gw', 'w', encoding='utf-8') as f:
+    with open('files/gw', 'w', encoding='utf-8') as f:
         f.write(repr(gw2))
-    with open('userconfig', 'w') as f:
+    with open('files/userconfig', 'w') as f:
         f.write(repr(userconfig))
 
 def sarcastic(st):
@@ -733,14 +733,13 @@ async def on_message(message):
                 stupid = ["You're the stupid one here, ok?",
                 'No you stupid.',
                 f'`{message.author.name}`: I am such an idiot!',
-                'You are an idiot ah hahahahahahahahaha',
-                'https://youareanidiot.cc']
+                'You are an idiot ah hahahahahahahahaha']
                 stupidn = random.randint(0,4)
                 await message.channel.send(stupid[stupidn])
             if gift == 1:
-                await message.channel.send(file=discord.File('youareanidiot.gif'))
+                await message.channel.send(file=discord.File('assests/youareanidiot.gif'))
             if gift == 2:
-                await message.channel.send(file=discord.File('youareanidiot.wav'))'''
+                await message.channel.send(file=discord.File('assests/youareanidiot.wav'))'''
 
     if message.content == '🔥':
         await message.channel.send('<a:fire_animated:778776515126362142>')
@@ -3015,7 +3014,7 @@ class image_commands(commands.Cog, name='image'):
     @commands.command(name='clippy', aliases=['paperclip'], description='It looks like your writing a letter, would you like some help?', usage='clippy <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def clippy(self, ctx, *, msg):
-        image = Image.open('clippy.png')
+        image = Image.open('assests/clippy.png')
         draw = ImageDraw.Draw(image)
         if platform.system() == 'Windows':
             font = ImageFont.truetype("C:\\Users\\wang1\\AppData\\Local\\Microsoft\\Windows\\Fonts\\FreeMono.ttf", 20)
@@ -3031,7 +3030,7 @@ class image_commands(commands.Cog, name='image'):
     @commands.command(name='ohnoes', description='Oh noes', usage='ohnoes <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def ohnoes(ctx, *, msg):
-        image = Image.open('ohnoes.png')
+        image = Image.open('assests/ohnoes.png')
         draw = ImageDraw.Draw(image)
         if platform.system() == 'Windows':
             font = ImageFont.truetype("C:\\Users\\wang1\\AppData\\Local\\Microsoft\\Windows\\Fonts\\FreeMono.ttf", 15)
