@@ -481,7 +481,7 @@ class LeaderBoardPosition:
 
 
 
-Token = ''
+Token = 'Njk1MDgzODM1NzA4MTQ1NzM0.XoVBRA.ojDdzd8WpjpbUzFdJKeoj8IEvEc'
 
 def custom_prefix(client, message):
     if message.guild.id in config.keys() and config[message.guild.id][4] != '':
@@ -2812,21 +2812,11 @@ class fun_commands(commands.Cog, name='fun'):
     @commands.command(name='impostor', aliases=['imposter', 'sus'], description='This will make it look like the other person is sending the message... kind of', usage='impostor <user> <message>')
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def impostor(self, ctx, user: discord.User, *, msg):
-        try:
-            hooks = await ctx.channel.webhooks()
-            hook = get(hooks, name="Geeson's Stupid Bot")
-            await hook.send(content=msg, username=user.name, avatar_url=user.avatar_url)
-            await ctx.message.delete()
-        except discord.HTTPException:
-            await ctx.channel.create_webhook(name="Geeson's Stupid Bot", avatar=None, reason=None)
-            hooks = await ctx.channel.webhooks()
-            hook = get(hooks, name="Geeson's Stupid Bot")
-            await hook.send(content=msg, username=user.name, avatar_url=user.avatar_url)
-        except AttributeError:
-            await ctx.channel.create_webhook(name="Geeson's Stupid Bot", avatar=None, reason=None)
-            hooks = await ctx.channel.webhooks()
-            hook = get(hooks, name="Geeson's Stupid Bot")
-            await hook.send(content=msg, username=user.name, avatar_url=user.avatar_url)
+        hooks = await ctx.channel.webhooks()
+        hook = utils.get(hooks, name='My Impostor Webhook')
+        if hook is None:
+            hook = await ctx.channel.create_webhook(name='My Impostor Webhook', avatar=None, reason=None)
+        await hook.send(content=msg, username=user.name, avatar_url=user.avatar_url)
 
 
     @commands.command(name='joke', description='developer jokes from the pyjokes module', usage='joke')
