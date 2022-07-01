@@ -479,9 +479,12 @@ class LeaderBoardPosition:
 ░╚════╝░╚══════╝╚═╝╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═╝░░░░░╚═╝░░░░░
 '''
 
+with open('client.token', 'r') as f:
+    Token = f.readline()
 
 
-Token = 'Njk1MDgzODM1NzA4MTQ1NzM0.XoVBRA.ojDdzd8WpjpbUzFdJKeoj8IEvEc'
+
+Token = 
 
 def custom_prefix(client, message):
     if message.guild.id in config.keys() and config[message.guild.id][4] != '':
