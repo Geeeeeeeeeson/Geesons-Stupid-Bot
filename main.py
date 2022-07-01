@@ -480,7 +480,7 @@ class LeaderBoardPosition:
 '''
 
 with open('client.token', 'r') as f:
-    Token = f.readline()
+    Token = f.readline()[0].strip()
 
 
 
