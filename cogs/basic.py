@@ -76,6 +76,7 @@ class Basic(commands.Cog, name='basic'):
                                   description=f'for more information do `help <category>`\n[invite link]({utils.constants.INVITE_LINK})',
                                   color=utils.constants.random_color())
             embed.add_field(name='Categories', value=utils.utils.help_categories(list(client_cogs)), inline=False)
+            embed.set_thumbnail(url=self.client.user.avatar.url)
             await ctx.send(embed=embed)
         elif sub_command.lower() in client_cogs:
             cog = self.client.get_cog(sub_command.lower())

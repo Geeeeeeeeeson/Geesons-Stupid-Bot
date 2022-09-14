@@ -42,12 +42,12 @@ class Fun(commands.Cog, name='fun'):
 
     @commands.command(name='impostor', aliases=['imposter', 'sus'], description='this command makes it seem like the other person sent the message', usage='impostor <user> <message>')
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def impostor(self, ctx, user: discord.User, *, msg):
+    async def impostor(self, ctx, i_user: discord.User, *, msg):
         hooks = await ctx.channel.webhooks()
         hook = discord.utils.get(hooks, name='Geeson\'s Stupid Bot')
         if hook is None:
-            hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=self.client.user.avatar, reason=None)
-        await hook.send(msg, username=user.name, avatar_url=user.avatar_url)
+            hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=self.client.user.avatar.url, reason=None)
+        await hook.send(msg, username=i_user.name, avatar_url=i_user.avatar.url)
 
 
 async def setup(client):
