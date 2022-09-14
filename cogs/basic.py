@@ -8,7 +8,7 @@ import utils.constants
 import utils.utils
 
 
-class Default(commands.Cog, name='basic'):
+class Basic(commands.Cog, name='basic'):
 
     def __init__(self, client):
         self.client = client
@@ -77,25 +77,21 @@ class Default(commands.Cog, name='basic'):
                                   color=random.randint(0x00, 0xffffff))
             embed.add_field(name='Categories', value=utils.utils.help_categories(list(client_cogs)), inline=False)
             await ctx.send(embed=embed)
-        elif sub_command.lower() in client_cogs.keys():
+        elif sub_command.lower() in client_cogs:
             cog = self.client.get_cog(sub_command.lower())
-            cmd = cog.get_commands()
+            cmd = [x.name for x in cog.get_commands()]
             embed = discord.Embed(title=f'{sub_command.lower()[0].upper()}{sub_command.lower()[1:]}',
                                   description=f'for more information do `help <command-name>`',
                                   color=random.randint(0x00, 0xffffff))
             embed.add_field(name='Commands', value=utils.utils.help_categories(cmd), inline=False)
             await ctx.send(embed=embed)
-        elif sub_command in client_commands.keys():
+        elif sub_command in client_commands:
             command_description = client_commands[sub_command][0]
             command_aliases = client_commands[sub_command][1]
             command_usage = client_commands[sub_command][2]
-            if not command_aliases:
-                command_aliases = 'None'
-            else:
-                command_aliases = ', '.join(command_aliases)
             embed = discord.Embed(title=sub_command, description=command_description,
                                   color=random.randint(0x00, 0xffffff))
-            embed.add_field(name='Aliases', value=f'{command_aliases}')
+            embed.add_field(name='Aliases', value=utils.utils.help_categories(command_aliases))
             embed.add_field(name='Usage', value=command_usage, inline=False)
             embed.set_footer(text='[] = optional field', icon_url='')
             await ctx.send(embed=embed)
@@ -119,4 +115,4 @@ class Default(commands.Cog, name='basic'):
 
 
 async def setup(client):
-    await client.add_cog(Default(client))
+    await client.add_cog(Basic(client))
