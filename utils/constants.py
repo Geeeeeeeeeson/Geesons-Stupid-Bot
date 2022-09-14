@@ -1,4 +1,8 @@
+import random
+
 INVITE_LINK = 'https://discord.com/oauth2/authorize?client_id=695083835708145734&permissions=21474836398&scope=bot'
+
+VERSION = '2.0.0-dev1'
 
 
 class Color:
@@ -22,3 +26,7 @@ class Color:
     darkmagenta = '\033[0;35m'
     darkblack = '\033[0;30m'
     end = '\033[0;0m'
+
+
+def random_color():
+    return random.randint(0x00, 0xffffff)

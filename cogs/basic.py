@@ -34,11 +34,11 @@ class Basic(commands.Cog, name='basic'):
             await ctx.send('Sorry, this command does not function in a private message.')
         elif error_type == commands.CommandOnCooldown:
             if error.retry_after > 60:
-                min = math.floor(error.retry_after / 60)
-                sec = f'{error.retry_after - (min * 60):.1f}'
-                return await ctx.send(embed=discord.Embed(color=random.randint(0, 16777215),
-                                                          description=f'This command is currenly on cooldown, Try again after **{min}m {sec}s**.'))
-            await ctx.send(embed=discord.Embed(color=random.randint(0, 16777215),
+                minutes = math.floor(error.retry_after / 60)
+                sec = f'{error.retry_after - (minutes * 60):.1f}'
+                return await ctx.send(embed=discord.Embed(color=utils.constants.random_color(),
+                                                          description=f'This command is currenly on cooldown, Try again after **{minutes}m {sec}s**.'))
+            await ctx.send(embed=discord.Embed(color=utils.constants.random_color(),
                                                description=f'This command is currently on cooldown, Try again after {error.retry_after:.1f}s.'))
         elif error_type == commands.MissingPermissions:
             await ctx.send(
@@ -74,7 +74,7 @@ class Basic(commands.Cog, name='basic'):
         if sub_command == '':
             embed = discord.Embed(title='Commands',
                                   description=f'for more information do `help <category>`\n[invite link]({utils.constants.INVITE_LINK})',
-                                  color=random.randint(0x00, 0xffffff))
+                                  color=utils.constants.random_color())
             embed.add_field(name='Categories', value=utils.utils.help_categories(list(client_cogs)), inline=False)
             await ctx.send(embed=embed)
         elif sub_command.lower() in client_cogs:
@@ -82,7 +82,7 @@ class Basic(commands.Cog, name='basic'):
             cmd = [x.name for x in cog.get_commands()]
             embed = discord.Embed(title=f'{sub_command.lower()[0].upper()}{sub_command.lower()[1:]}',
                                   description=f'for more information do `help <command-name>`',
-                                  color=random.randint(0x00, 0xffffff))
+                                  color=utils.constants.random_color())
             embed.add_field(name='Commands', value=utils.utils.help_categories(cmd), inline=False)
             await ctx.send(embed=embed)
         elif sub_command in client_commands:
@@ -90,7 +90,7 @@ class Basic(commands.Cog, name='basic'):
             command_aliases = client_commands[sub_command][1]
             command_usage = client_commands[sub_command][2]
             embed = discord.Embed(title=sub_command, description=command_description,
-                                  color=random.randint(0x00, 0xffffff))
+                                  color=utils.constants.random_color())
             embed.add_field(name='Aliases', value=utils.utils.help_categories(command_aliases))
             embed.add_field(name='Usage', value=command_usage, inline=False)
             embed.set_footer(text='[] = optional field', icon_url='')
@@ -101,7 +101,7 @@ class Basic(commands.Cog, name='basic'):
     @commands.command(name='hello', description='hello', usage='hello')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def hello(self, ctx):
-        await ctx.send(f'Hello, {ctx.author.name}')
+        await ctx.send(f'Hello, {ctx.author.name}.')
 
     @commands.command(name='say', description='make the bot say stuff', usage='say <msg>')
     @commands.cooldown(1, 5, commands.BucketType.user)

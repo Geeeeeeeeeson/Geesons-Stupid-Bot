@@ -53,6 +53,7 @@ async def save():
 
 
 async def main():
+    print(f'{Color.cyan}Geeson\'s Stupid Bot VERSION {utils.constants.VERSION}')
     save.start()
     await load_ext()
     await client.start(token)

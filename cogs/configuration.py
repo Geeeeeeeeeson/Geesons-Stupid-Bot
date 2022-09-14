@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 
 import math
-import random
+
+import utils.constants
 
 
 class Configuration(commands.Cog, name='configuration'):
@@ -24,7 +25,7 @@ class Configuration(commands.Cog, name='configuration'):
                     2: "Low",
                     0: 'None'}
         creation_date = math.floor(ctx.guild.created_at.timestamp())
-        server_info = discord.Embed(title='Server Info', color=random.randint(0, 16777215))
+        server_info = discord.Embed(title='Server Info', color=utils.constants.random_color())
         server_info.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon_url)
         server_info.add_field(name='Basic',
                               value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Region:** {ctx.guild.region}\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
@@ -40,7 +41,7 @@ class Configuration(commands.Cog, name='configuration'):
         if user is None:
             user = ctx.author
         creation_date = math.floor(user.created_at.timestamp())
-        server_info = discord.Embed(title='User Info', color=random.randint(0, 16777215))
+        server_info = discord.Embed(title='User Info', color=utils.constants.random_color())
         server_info.set_author(name=f'{user}', icon_url=user.avatar_url)
         server_info.add_field(name='ID', value=f'{user.id}')
         server_info.add_field(name='Creation Date', value=f'<t:{creation_date}> (<t:{creation_date}:R>)')

@@ -5,4 +5,3 @@ def help_categories(ls: list):
     val_string = '`, `'.join(ls)
     val_string = f'`{val_string}`'
     return val_string
-
