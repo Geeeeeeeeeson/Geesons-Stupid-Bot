@@ -24,15 +24,15 @@ class Configuration(commands.Cog, name='configuration'):
         level2fa = {discord.MFALevel.require_2fa: "Enabled",
                     discord.MFALevel.disabled: 'Disabled'}
         creation_date = math.floor(ctx.guild.created_at.timestamp())
-        server_info = discord.Embed(title='Server Info', color=utils.constants.random_color())
-        server_info.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
-        server_info.add_field(name='Basic',
-                              value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
-        server_info.add_field(name='Security',
-                              value=f'**2fa:** {level2fa[ctx.guild.mfa_level]}\n**Verification Level:** {ctx.guild.verification_level}')
-        server_info.add_field(name='Features', value=f'{features}', inline=False)
-        server_info.set_thumbnail(url=ctx.guild.icon.url)
-        await ctx.channel.send(embed=server_info)
+        embed = discord.Embed(title='Server Info', color=utils.constants.random_color())
+        embed.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
+        embed.add_field(name='Basic',
+                        value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
+        embed.add_field(name='Security',
+                        value=f'**2fa:** {level2fa[ctx.guild.mfa_level]}\n**Verification Level:** {ctx.guild.verification_level}')
+        embed.add_field(name='Features', value=f'{features}', inline=False)
+        embed.set_thumbnail(url=ctx.guild.icon.url)
+        await ctx.channel.send(embed=embed)
 
     @commands.command(name='userinfo', aliases=['user'], description='check user information', usage='userinfo <user>')
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -40,12 +40,12 @@ class Configuration(commands.Cog, name='configuration'):
         if user is None:
             user = ctx.author
         creation_date = math.floor(user.created_at.timestamp())
-        server_info = discord.Embed(title='User Info', color=utils.constants.random_color())
-        server_info.set_author(name=f'{user}', icon_url=user.avatar.url)
-        server_info.add_field(name='ID', value=f'{user.id}')
-        server_info.add_field(name='Creation Date', value=f'<t:{creation_date}> (<t:{creation_date}:R>)')
-        server_info.set_thumbnail(url=user.avatar.url)
-        await ctx.channel.send(embed=server_info)
+        embed = discord.Embed(title='User Info', color=utils.constants.random_color())
+        embed.set_author(name=f'{user}', icon_url=user.avatar.url)
+        embed.add_field(name='ID', value=f'{user.id}')
+        embed.add_field(name='Creation Date', value=f'<t:{creation_date}> (<t:{creation_date}:R>)')
+        embed.set_thumbnail(url=user.avatar.url)
+        await ctx.channel.send(embed=embed)
 
 
 async def setup(client):
