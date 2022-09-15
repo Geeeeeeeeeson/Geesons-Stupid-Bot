@@ -41,7 +41,7 @@ class ImageCog(commands.Cog, name='image'):
                       usage='clippy <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def clippy(self, ctx, *, msg):
-        image = Image.open('assests/clippy.png')
+        image = Image.open('assets/clippy.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 20)
         text2 = utils.utils.bend(30, msg)
@@ -53,7 +53,7 @@ class ImageCog(commands.Cog, name='image'):
     @commands.command(name='ohnoes', description='Oh noes', usage='ohnoes <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def ohnoes(self, ctx, *, msg):
-        image = Image.open('assests/ohnoes.png')
+        image = Image.open('assets/ohnoes.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 15)
         text2 = utils.utils.bend(33, msg)
@@ -64,4 +64,4 @@ class ImageCog(commands.Cog, name='image'):
 
 
 async def setup(client):
-    client.add_cog(ImageCog(client))
+    await client.add_cog(ImageCog(client))
