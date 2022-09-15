@@ -21,14 +21,13 @@ class Configuration(commands.Cog, name='configuration'):
             features = '\n'.join(ctx.guild.features)
         channel_amount = len(ctx.guild.text_channels)
         vc_amount = len(ctx.guild.voice_channels)
-        level2fa = {1: 'High',
-                    2: "Low",
-                    0: 'None'}
+        level2fa = {discord.MFALevel.require_2fa: "Enabled",
+                    discord.MFALevel.disabled: 'Disabled'}
         creation_date = math.floor(ctx.guild.created_at.timestamp())
         server_info = discord.Embed(title='Server Info', color=utils.constants.random_color())
         server_info.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
         server_info.add_field(name='Basic',
-                              value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Region:** {ctx.guild.region}\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
+                              value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
         server_info.add_field(name='Security',
                               value=f'**2fa:** {level2fa[ctx.guild.mfa_level]}\n**Verification Level:** {ctx.guild.verification_level}')
         server_info.add_field(name='Features', value=f'{features}', inline=False)
