@@ -16,25 +16,14 @@ class ImageCog(commands.Cog, name='image'):
     def __int__(self, client):
         self.client = client
 
-    commands.command(name='ascii', description='ascii art', usage='ascii <text|image|random> <text-or-image>')
-
+    @commands.command(name='ascii', description='ascii art', usage='ascii <text>')
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def ascii(self, ctx, arg0, *, arg1):
+    async def ascii(self, ctx, *, arg1):
         ascii_art = art.text2art(arg1, font='random')
-        try:
-            with open('._ascii.temp.txt', 'w+') as f:
-                f.write(ascii_art)
-            await ctx.channel.send(file=discord.File('._ascii.temp.txt'))
-            os.remove('._ascii.temp.txt')
-        except discord.HTTPException:
-            await ctx.channel.send('This message is too long to convert to ascii.')
-        if arg0.lower() == 'image' or arg0.lower() == 'i':
-            await ctx.channel.send('Currently Unsupported.')
-        elif arg0.lower() == 'random' or arg0.lower() == 'r':
-            ascii_art = art.art("random")
-            await ctx.channel.send(f"`{ascii_art}`")
-        else:
-            await ctx.channel.send('The correct usage is `ascii <text|image> <text-or-image>`.')
+        with open('._ascii.temp.txt', 'w+') as f:
+            f.write(ascii_art)
+        await ctx.channel.send(file=discord.File('._ascii.temp.txt'))
+        os.remove('._ascii.temp.txt')
 
     @commands.command(name='clippy', aliases=['paperclip'],
                       description='It looks like your writing a letter, would you like some help?',
