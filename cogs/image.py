@@ -24,7 +24,6 @@ class ImageCog(commands.Cog, name='image'):
         try:
             with open('._ascii.temp.txt', 'w+') as f:
                 f.write(ascii_art)
-            # await message.channel.send(f'**NOTE:** Too much character may result in poor formatting.\n```{asciit}```', file=discord.File('._ascii.temp.txt'))
             await ctx.channel.send(file=discord.File('._ascii.temp.txt'))
             os.remove('._ascii.temp.txt')
         except discord.HTTPException:
