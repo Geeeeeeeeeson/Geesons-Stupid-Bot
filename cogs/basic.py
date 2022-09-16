@@ -50,6 +50,15 @@ class Basic(commands.Cog, name='basic'):
             raise RuntimeError(f'Uncaught exception: {error_type.__name__}: {error_type}') from error
 
     @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        if message.channel.id in utils.file_storage.guild_data[message.guild.id]['antidelete']:
+            if message.content[0] == '≪':
+                return
+            await message.channel.send(f'≪{message.author.mention}≫ {message.content}',
+                                       allowed_mentions=discord.AllowedMentions(everyone=False, users=False,
+                                                                                roles=False))
+
+    @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.client.user:
             return
