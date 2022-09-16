@@ -46,8 +46,9 @@ class Fun(commands.Cog, name='fun'):
         hooks = await ctx.channel.webhooks()
         hook = discord.utils.get(hooks, name='Geeson\'s Stupid Bot')
         if hook is None:
-            hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=self.client.user.avatar.url, reason=None)
-        await hook.send(msg, username=i_user.name, avatar_url=i_user.avatar.url)
+            hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=None, reason=None)
+        await hook.send(content=msg, username=i_user.name, avatar_url=i_user.avatar.url)
+        await ctx.message.delete()
 
 
 async def setup(client):

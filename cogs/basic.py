@@ -5,6 +5,7 @@ import math
 
 import utils.constants
 import utils.utils
+import utils.file_storage
 
 
 class Basic(commands.Cog, name='basic'):
@@ -52,8 +53,17 @@ class Basic(commands.Cog, name='basic'):
     async def on_message(self, message):
         if message.author == self.client.user:
             return
-
         if message.author.bot:
+            return
+        if message.channel.type == discord.ChannelType.private:
+            return
+
+        utils.file_storage.guild_if_empty(message.guild.id)
+        utils.file_storage.user_if_empty(message.author.id)
+
+        if utils.file_storage.user_data[message.author.id]['is_banned'] \
+                and message.content.startswith(utils.file_storage.guild_data[message.guild.id]['prefix']):
+            await message.channel.send('You have been bot banned, you may not use any commands during your ban.')
             return
 
     @commands.command(name='help', aliases=['commands', 'command', 'cmd', 'cmds', 'ls'],

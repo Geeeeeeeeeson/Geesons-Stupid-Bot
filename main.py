@@ -11,6 +11,7 @@ import sys
 
 import utils.file_storage
 from utils.constants import Color
+from utils.file_storage import guild_data
 
 
 def terminate_handler(signal, frame):
@@ -22,16 +23,21 @@ def terminate_handler(signal, frame):
 signal.signal(signal.SIGINT, terminate_handler)
 
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
+intents = discord.Intents.all()
 
 
 with open('client.token', 'r') as f:
     token = f.readline().strip()
 
 
-client = commands.Bot(command_prefix='bott ', intents=intents)
+def custom_prefix(client, message):
+    if message.guild.id in guild_data:
+        return guild_data[message.guild.id]['prefix']
+    else:
+        return 'bot '
+
+
+client = commands.Bot(command_prefix=custom_prefix, intents=intents)
 client.remove_command('help')
 
 

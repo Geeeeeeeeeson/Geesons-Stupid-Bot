@@ -16,13 +16,13 @@ def save_all():
 
 def guild_if_empty(guild_id: int):
     if guild_id not in guild_data:
-        guild_data['guild_id'] = {'antidelete': [],
-                                  }
+        guild_data[guild_id] = {'prefix': 'bot ',
+                                'antidelete': [], }
 
 
 def user_if_empty(user_id: int):
     if user_id not in user_data:
-        user_data['user_data'] = {'economy':
+        user_data[user_id] = {'economy':
                                       {'money':
                                            {'wallet': 0,
                                             'bank': 0,
