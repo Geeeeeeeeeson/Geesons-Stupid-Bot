@@ -1,4 +1,8 @@
+"""Utilities"""
+
+
 def help_categories(ls: list):
+    """Add code block to a list"""
     if not ls:
         return None
     val_string = '`, `'.join(ls)
@@ -6,7 +10,8 @@ def help_categories(ls: list):
     return val_string
 
 
-def bend(w, s):
+def bend(w: int, s: str):
+    """New Line after certain amount of characters"""
     s = s.split(" ")
     lst = filter(None, s)
     new_lst = [""]

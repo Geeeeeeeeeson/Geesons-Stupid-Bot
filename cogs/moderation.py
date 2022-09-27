@@ -1,3 +1,6 @@
+"""Moderation Commands"""
+
+
 import discord
 from discord.ext import commands
 
@@ -12,10 +15,19 @@ class Moderation(commands.Cog, name='moderation'):
     def __init__(self, client):
         self.client = client
 
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        if message.channel.id in config[message.guild.id]['antidelete']:
+            if message.content[0] == '≪':
+                return
+            await message.channel.send(f'≪{message.author.mention}≫ {message.content}',
+                                       allowed_mentions=discord.AllowedMentions(everyone=False, users=False,
+                                                                                roles=False))
+
     @commands.command(name='prefix', description='change the prefix for the server', usage='prefix [prefix]')
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.has_permissions(manage_guild=True)
-    async def prefix(self, ctx, *, msg=''):
+    async def prefix(self, ctx, *, msg: str = ''):
         if len(msg) > 10:
             await ctx.send('You may not have a prefix longer than 10 characters.')
             return
@@ -23,8 +35,8 @@ class Moderation(commands.Cog, name='moderation'):
             config[ctx.guild.id]['prefix'] = 'bot '
             await ctx.channel.send(f'Reset the prefix to `bot`.')
             return
-        if msg[-1] not in string.punctuation and msg[-1] not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            msg = msg + ' '
+        if msg[-1] not in string.punctuation and msg[-1] not in string.digits:
+            msg += ' '
         config[ctx.guild.id]['prefix'] = msg
         await ctx.channel.send(
             f'Successfully set the prefix to `{msg}`.\n\nIf your prefix ends with a symbol or number, you do not have '

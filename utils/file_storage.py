@@ -1,3 +1,5 @@
+"""File loading and saving"""
+
 import ast
 
 with open('./data/guild_data', 'r') as f:
@@ -17,7 +19,8 @@ def save_all():
 def guild_if_empty(guild_id: int):
     if guild_id not in guild_data:
         guild_data[guild_id] = {'prefix': 'bot ',
-                                'antidelete': [], }
+                                'antidelete': [],
+                                'log': []}
 
 
 def user_if_empty(user_id: int):

@@ -1,3 +1,5 @@
+"""Geeson's Stupid Bot Constants"""
+
 import random
 
 INVITE_LINK = 'https://discord.com/oauth2/authorize?client_id=695083835708145734&permissions=21474836398&scope=bot'

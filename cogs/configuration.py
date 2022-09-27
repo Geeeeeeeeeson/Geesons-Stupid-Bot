@@ -1,3 +1,6 @@
+"""Configuration commands"""
+
+
 import discord
 from discord.ext import commands
 
