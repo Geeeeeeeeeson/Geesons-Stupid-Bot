@@ -6,7 +6,7 @@ from discord.ext import commands
 
 import os
 
-from utils.file_storage import user_data
+from file_storage import user_data
 
 
 class Admin(commands.Cog, name='admin'):

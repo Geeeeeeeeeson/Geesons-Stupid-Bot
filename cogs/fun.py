@@ -37,13 +37,9 @@ class Fun(commands.Cog, name='fun'):
     @commands.command(name='backwards', aliases=['bw'], description='sdrawkcab ti yas lliw I dna gnihtemos em llet uoY', usage='backwards <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def backwards(self, ctx, *, msg):
-        invalid_char = ['<', '>']
-        for i in invalid_char:
-            if i in msg:
-                return await ctx.channel.send(f'I may not reverse a message with a custom emoji or mention.\nBlacklisted characters `{invalid_char}`')
         await ctx.channel.send(msg[::-1])
 
-    @commands.command(name='impostor', aliases=['imposter', 'sus'], description='this command makes it seem like the other person sent the message', usage='impostor <user> <message>')
+    @commands.command(name='impostor', description='this commands sends a webhook with the other users name and profile picture', usage='impostor <user> <message>')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def impostor(self, ctx, i_user: discord.User, *, msg):
         hooks = await ctx.channel.webhooks()

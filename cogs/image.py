@@ -11,7 +11,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-import utils.utils
+import utils
 
 
 class ImageCog(commands.Cog, name='image'):
@@ -36,7 +36,7 @@ class ImageCog(commands.Cog, name='image'):
         image = Image.open('assets/clippy.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 20)
-        text2 = utils.utils.bend(30, msg)
+        text2 = utils.bend(30, msg)
         draw.text((51, 34), f"{text2}", (0, 0, 0), font=font)
         image.save('sample-out-clippy.PNG')
         await ctx.send(file=discord.File('sample-out-clippy.PNG'))
@@ -48,7 +48,7 @@ class ImageCog(commands.Cog, name='image'):
         image = Image.open('assets/ohnoes.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 15)
-        text2 = utils.utils.bend(33, msg)
+        text2 = utils.bend(33, msg)
         draw.text((172, 66), f"{text2}", (0, 0, 0), font=font)
         image.save('sample-out.PNG')
         await ctx.send(file=discord.File('sample-out.PNG'))

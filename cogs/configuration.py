@@ -6,7 +6,7 @@ from discord.ext import commands
 
 import math
 
-import utils.constants
+import constants
 
 
 class Configuration(commands.Cog, name='configuration'):
@@ -27,7 +27,7 @@ class Configuration(commands.Cog, name='configuration'):
         level2fa = {discord.MFALevel.require_2fa: "Enabled",
                     discord.MFALevel.disabled: 'Disabled'}
         creation_date = math.floor(ctx.guild.created_at.timestamp())
-        embed = discord.Embed(title='Server Info', color=utils.constants.random_color())
+        embed = discord.Embed(title='Server Info', color=constants.random_color())
         embed.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
         embed.add_field(name='Basic',
                         value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
@@ -43,7 +43,7 @@ class Configuration(commands.Cog, name='configuration'):
         if user is None:
             user = ctx.author
         creation_date = math.floor(user.created_at.timestamp())
-        embed = discord.Embed(title='User Info', color=utils.constants.random_color())
+        embed = discord.Embed(title='User Info', color=constants.random_color())
         embed.set_author(name=f'{user}', icon_url=user.avatar.url)
         embed.add_field(name='ID', value=f'{user.id}')
         embed.add_field(name='Creation Date', value=f'<t:{creation_date}> (<t:{creation_date}:R>)')

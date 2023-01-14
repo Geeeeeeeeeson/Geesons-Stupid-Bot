@@ -9,14 +9,14 @@ import pathlib as pl
 import signal
 import sys
 
-import utils.file_storage
-from utils.constants import Color
-from utils.file_storage import guild_data
+import file_storage
+from constants import Color
+from file_storage import guild_data
 
 
 def terminate_handler(signal, frame):
     print(f'\n{Color.red}Caught termination signal, exiting.{Color.end}')
-    utils.file_storage.save_all()
+    file_storage.save_all()
     sys.exit(0)
 
 
@@ -55,11 +55,11 @@ async def on_ready():
 
 @tasks.loop(minutes=10.0)
 async def save():
-    utils.file_storage.save_all()
+    file_storage.save_all()
 
 
 async def main():
-    print(f'{Color.cyan}Geeson\'s Stupid Bot VERSION {utils.constants.VERSION}')
+    print(f'{Color.cyan}Geeson\'s Stupid Bot VERSION {constants.VERSION}')
     save.start()
     await load_ext()
     await client.start(token)

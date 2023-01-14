@@ -7,7 +7,7 @@ from discord.ext import commands
 import asyncio
 import string
 
-from utils.file_storage import guild_data as config
+from file_storage import guild_data as config
 
 
 class Moderation(commands.Cog, name='moderation'):

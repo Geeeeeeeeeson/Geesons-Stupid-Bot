@@ -6,9 +6,9 @@ from discord.ext import commands
 
 import math
 
-import utils.constants
-import utils.utils
-import utils.file_storage
+import constants
+import utils
+import file_storage
 
 
 class Basic(commands.Cog, name='basic'):
@@ -39,9 +39,9 @@ class Basic(commands.Cog, name='basic'):
             if error.retry_after > 60:
                 minutes = math.floor(error.retry_after / 60)
                 sec = f'{error.retry_after - (minutes * 60):.1f}'
-                return await ctx.send(embed=discord.Embed(color=utils.constants.random_color(),
+                return await ctx.send(embed=discord.Embed(color=constants.random_color(),
                                                           description=f'This command is currenly on cooldown, Try again after **{minutes}m {sec}s**.'))
-            await ctx.send(embed=discord.Embed(color=utils.constants.random_color(),
+            await ctx.send(embed=discord.Embed(color=constants.random_color(),
                                                description=f'This command is currently on cooldown, Try again after {error.retry_after:.1f}s.'))
         elif error_type == commands.MissingPermissions:
             await ctx.send(
@@ -61,11 +61,11 @@ class Basic(commands.Cog, name='basic'):
         if message.channel.type == discord.ChannelType.private:
             return
 
-        utils.file_storage.guild_if_empty(message.guild.id)
-        utils.file_storage.user_if_empty(message.author.id)
+        file_storage.guild_if_empty(message.guild.id)
+        file_storage.user_if_empty(message.author.id)
 
-        if utils.file_storage.user_data[message.author.id]['is_banned'] \
-                and message.content.startswith(utils.file_storage.guild_data[message.guild.id]['prefix']):
+        if file_storage.user_data[message.author.id]['is_banned'] \
+                and message.content.startswith(file_storage.guild_data[message.guild.id]['prefix']):
             await message.channel.send('You have been bot banned, you may not use any commands during your ban.')
             return
 
@@ -85,9 +85,9 @@ class Basic(commands.Cog, name='basic'):
                        'admin': 'commands only for bot admins', }
         if sub_command == '':
             embed = discord.Embed(title='Commands',
-                                  description=f'for more information do `help <category>`\n[invite link]({utils.constants.INVITE_LINK})',
-                                  color=utils.constants.random_color())
-            embed.add_field(name='Categories', value=utils.utils.help_categories(list(client_cogs)), inline=False)
+                                  description=f'for more information do `help <category>`\n[invite link]({constants.INVITE_LINK})',
+                                  color=constants.random_color())
+            embed.add_field(name='Categories', value=utils.help_categories(list(client_cogs)), inline=False)
             embed.set_thumbnail(url=self.client.user.avatar.url)
             await ctx.send(embed=embed)
         elif sub_command.lower() in client_cogs:
@@ -95,16 +95,16 @@ class Basic(commands.Cog, name='basic'):
             cmd = [x.name for x in cog.get_commands()]
             embed = discord.Embed(title=f'{sub_command.lower()[0].upper()}{sub_command.lower()[1:]}',
                                   description=f'for more information do `help <command-name>`',
-                                  color=utils.constants.random_color())
-            embed.add_field(name='Commands', value=utils.utils.help_categories(cmd), inline=False)
+                                  color=constants.random_color())
+            embed.add_field(name='Commands', value=utils.help_categories(cmd), inline=False)
             await ctx.send(embed=embed)
         elif sub_command in client_commands:
             command_description = client_commands[sub_command][0]
             command_aliases = client_commands[sub_command][1]
             command_usage = client_commands[sub_command][2]
             embed = discord.Embed(title=sub_command, description=command_description,
-                                  color=utils.constants.random_color())
-            embed.add_field(name='Aliases', value=utils.utils.help_categories(command_aliases))
+                                  color=constants.random_color())
+            embed.add_field(name='Aliases', value=utils.help_categories(command_aliases))
             embed.add_field(name='Usage', value=command_usage, inline=False)
             embed.set_footer(text='[] = optional field', icon_url='')
             await ctx.send(embed=embed)
