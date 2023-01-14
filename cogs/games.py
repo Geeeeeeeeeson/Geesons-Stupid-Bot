@@ -1,6 +1,5 @@
 """Games commands"""
 
-
 import discord
 from discord.ext import commands
 
@@ -18,62 +17,54 @@ class Game(commands.Cog, name='games'):
     @commands.command(name='hangman', description='don\'t kill innocent people', usage='hangman')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def hangman(self, ctx):
-        answer = random.sample(english_words_lower_set, 1)
-        joinanswer = ' '.join(answer)
-        display = []
-        display.extend(joinanswer)
-        for i in range(len(display)):
-            display[i] = '`_`'
-        joindisplay = ' '.join(display)
-        # clue = dictionary.meaning(joinanswer)
-        # msg = await ctx.channel.send(f'Time to play hangman:\n**CLUE**:{clue}\n{joindisplay}')
-        msg = await ctx.channel.send(f'Time to play hangman:\n{joindisplay}')
-        msg2 = await ctx.channel.send('** **\n    ___\n   |\n   |\n   |\n   |\n   |\n-----')
+
+        hangman_ui = {0: '** **\n    ___\n   |\n   |\n   |\n   |\n   |\n-----',
+                      1: '** **\n    ___\n   |   O\n   |\n   |\n   |\n   |\n-----',
+                      2: '** **\n    ___\n   |   O\n   |    |\n   |\n   |\n   |\n-----',
+                      3: '** **\n    ___\n   |   O\n   | \ |\n   |\n   |\n   |\n-----',
+                      4: '** **\n    ___\n   |   O\n   | \ | /\n   |\n   |\n   |\n-----',
+                      5: '** **\n    ___\n   |   O\n   | \ | /\n   |   /\n   |\n   |\n-----',
+                      6: '** **\n    ___\n   |   O\n   | \ | /\n   |   /\ \n   |\n   |\n-----', }
+
+        answer = ' '.join(random.sample(english_words_lower_set, 1))
+        display = ['`_`' for i in range(len(answer))]
         count = 0
         deaths = 0
-        charactersn = []
-        usedcharacters = []
-        charactersjoin = ' '.join(charactersn)
-        while count < len(joinanswer):
-            if deaths == 1:
-                await msg2.edit(content='** **\n    ___\n   |   O\n   |\n   |\n   |\n   |\n-----')
-            elif deaths == 2:
-                await msg2.edit(content='** **\n    ___\n   |   O\n   |    |\n   |\n   |\n   |\n-----')
-            elif deaths == 3:
-                await msg2.edit(content='** **\n    ___\n   |   O\n   | \ |\n   |\n   |\n   |\n-----')
-            elif deaths == 4:
-                await msg2.edit(content='** **\n    ___\n   |   O\n   | \ | /\n   |\n   |\n   |\n-----')
-            elif deaths == 5:
-                await msg2.edit(content='** **\n    ___\n   |   O\n   | \ | /\n   |   /\n   |\n   |\n-----')
-            elif deaths == 6:
-                return await msg2.edit(
-                    content=f'** **\n    ___\n   |   O\n   | \ | /\n   |   /\ \n   |\n   |\n-----\n**YOU LOSE, The word is `{joinanswer}`**')
+        invalid_char = []
+        char_used = []
+
+        hangman_header = await ctx.channel.send(f'Time to play hangman:\n{" ".join(display)}')
+        hangman_game_msg = await ctx.channel.send(hangman_ui[deaths])
+
+        while count < len(answer):
+            await hangman_game_msg.edit(content=hangman_ui[deaths])
+            if deaths == 6:
+                await hangman_header.edit(
+                    content=f'Time to play hangman:\nInvaild Characters: {" ".join(invalid_char)}\n{" ".join(display)}\n**the word was `{answer}`**')
+                return
             try:
-                msg3 = await self.client.wait_for('message', timeout=30, check=lambda
+                user_input = await self.client.wait_for('message', timeout=30, check=lambda
                     msg: msg.author == ctx.author and msg.channel == ctx.channel)
             except asyncio.TimeoutError:
                 return await ctx.channel.send('Timed out, game canceled.')
             else:
-                guess = msg3.content[0]
+                guess = user_input.content[0]
                 guess = guess.lower()
-                for i in range(len(joinanswer)):
-                    if joinanswer[i] == guess:
+                answer_guess = [i for i, s in enumerate(answer) if s == guess]
+                if answer_guess:
+                    for i in answer_guess:
                         display[i] = f'`{guess}`'
-                        if str(guess) not in usedcharacters:
-                            count += 1
-                            # await msg3.add_reaction('\u2705')
-                usedcharacters.append(guess)
-                if str(guess) not in joinanswer:
+                    count += 1
+                    if guess not in char_used:
+                        char_used.append(guess)
+                if not answer_guess and guess not in invalid_char:
                     deaths += 1
-                    # await msg3.add_reaction('\u274c')
-                    if str(guess) not in charactersn:
-                        charactersn.append(guess)
-                joindisplay = ' '.join(display)
-                charactersjoin = ' '.join(charactersn)
-                # await msg.edit(content=f'Time to play hangman:\n**CLUE**:{clue}\nInvaild Characters: {charactersjoin}\n{joindisplay}')
-                await msg.edit(content=f'Time to play hangman:\nInvaild Characters: {charactersjoin}\n{joindisplay}')
-        await ctx.channel.send(f'🥳 **GG, the word was `{joinanswer}`** 🥳')
+                    invalid_char.append(guess)
+                await hangman_header.edit(
+                    content=f'Time to play hangman:\nInvaild Characters: {" ".join(invalid_char)}\n{" ".join(display)}')
+        await ctx.channel.send(f'🥳 **GG, the word was `{answer}`** 🥳')
 
 
-def setup(client):
-    client.add_cog(Game(client))
+
+async def setup(client):
+    await client.add_cog(Game(client))

@@ -10,7 +10,7 @@ import signal
 import sys
 
 import file_storage
-from constants import Color
+from constants import Color, VERSION
 from file_storage import guild_data
 
 
@@ -59,7 +59,7 @@ async def save():
 
 
 async def main():
-    print(f'{Color.cyan}Geeson\'s Stupid Bot VERSION {constants.VERSION}')
+    print(f'{Color.cyan}Geeson\'s Stupid Bot VERSION {VERSION}')
     save.start()
     await load_ext()
     await client.start(token)
