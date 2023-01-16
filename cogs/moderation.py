@@ -31,7 +31,7 @@ class Moderation(commands.Cog, name='moderation'):
         if len(msg) > 10:
             await ctx.send('You may not have a prefix longer than 10 characters.')
             return
-        if msg.lower() == 'reset' or msg == '' or msg.lower() == 'bot':
+        if not msg or msg.lower() == 'bot':
             config[ctx.guild.id]['prefix'] = 'bot '
             await ctx.channel.send(f'Reset the prefix to `bot`.')
             return
@@ -82,9 +82,9 @@ class Moderation(commands.Cog, name='moderation'):
         if amount <= 1:
             return await ctx.channel.send('You must at least delete 2 messages.')
         await ctx.channel.purge(limit=amount + 1)
-        msgpr = await ctx.channel.send(f'Successfully purged **{amount}** messages.')
+        purged_msg = await ctx.channel.send(f'Successfully purged **{amount}** messages.')
         await asyncio.sleep(1)
-        await msgpr.delete()
+        await purged_msg.delete()
 
     @commands.command(name='antidelete', description='make users unable to delete messages', usage='antidelete')
     @commands.has_permissions(manage_messages=True)
