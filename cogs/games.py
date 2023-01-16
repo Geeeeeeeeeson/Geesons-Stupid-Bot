@@ -8,6 +8,8 @@ import random
 
 from english_words import english_words_lower_set
 
+import file_storage
+
 
 class Game(commands.Cog, name='games'):
 
@@ -17,6 +19,9 @@ class Game(commands.Cog, name='games'):
     @commands.command(name='hangman', description='don\'t kill innocent people', usage='hangman')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def hangman(self, ctx):
+
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
 
         hangman_ui = {0: '** **\n    ___\n   |\n   |\n   |\n   |\n   |\n-----',
                       1: '** **\n    ___\n   |   O\n   |\n   |\n   |\n   |\n-----',
@@ -63,7 +68,6 @@ class Game(commands.Cog, name='games'):
                 await hangman_header.edit(
                     content=f'Time to play hangman:\nInvaild Characters: {" ".join(invalid_char)}\n{" ".join(display)}')
         await ctx.channel.send(f'🥳 **GG, the word was `{answer}`** 🥳')
-
 
 
 async def setup(client):

@@ -7,6 +7,7 @@ from discord.ext import commands
 import math
 
 import constants
+import file_storage
 
 
 class Configuration(commands.Cog, name='configuration'):
@@ -18,6 +19,8 @@ class Configuration(commands.Cog, name='configuration'):
                       description='check server information', usage='serverinfo')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def serverinfo(self, ctx):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if not ctx.guild.features:
             features = 'None'
         else:
@@ -40,6 +43,8 @@ class Configuration(commands.Cog, name='configuration'):
     @commands.command(name='userinfo', aliases=['user'], description='check user information', usage='userinfo <user>')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def userinfo(self, ctx, user: discord.User = None):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if user is None:
             user = ctx.author
         creation_date = math.floor(user.created_at.timestamp())

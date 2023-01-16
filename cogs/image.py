@@ -33,6 +33,8 @@ class ImageCog(commands.Cog, name='image'):
                       usage='clippy <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def clippy(self, ctx, *, msg):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         image = Image.open('assets/clippy.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 20)
@@ -45,6 +47,8 @@ class ImageCog(commands.Cog, name='image'):
     @commands.command(name='ohnoes', description='Oh noes', usage='ohnoes <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def ohnoes(self, ctx, *, msg):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         image = Image.open('assets/ohnoes.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 15)

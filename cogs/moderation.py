@@ -7,6 +7,7 @@ from discord.ext import commands
 import asyncio
 import string
 
+import file_storage
 from file_storage import guild_data as config
 
 
@@ -28,6 +29,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx, *, msg: str = ''):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if len(msg) > 10:
             await ctx.send('You may not have a prefix longer than 10 characters.')
             return
@@ -45,6 +48,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.command(name='kick', description='kick users', usage='kick <user> [reason]')
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason: str = ''):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if user == self.client.user:
             await ctx.channel.send("You can't kick me with my own command you know.")
             return
@@ -61,6 +66,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.command(name='ban', description='ban users', usage='ban <user> [reason]')
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.User, *, reason=''):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if user == self.client.user:
             await ctx.channel.send("You can't ban me with my own command you know.")
             return
@@ -79,6 +86,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def purge(self, ctx, amount: int = 2):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if amount <= 1:
             return await ctx.channel.send('You must at least delete 2 messages.')
         await ctx.channel.purge(limit=amount + 1)
@@ -90,6 +99,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def antidelete(self, ctx):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if ctx.channel.id not in config[ctx.guild.id]['antidelete']:
             config[ctx.guild.id]['antidelete'].append(ctx.channel.id)
             await ctx.channel.send('Turned on antidelete for this channel.')
@@ -101,6 +112,8 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.has_permissions(manage_channels=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slowmode(self, ctx, slowmode: int = 0):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         if slowmode < 0:
             await ctx.channel.send("Your slowmode can't be a negative number")
         if slowmode > 21600:

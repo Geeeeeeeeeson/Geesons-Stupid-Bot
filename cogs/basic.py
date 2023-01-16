@@ -73,6 +73,8 @@ class Basic(commands.Cog, name='basic'):
                       description='Help command, shows all commands.', usage='help [*sub_command]')
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def help(self, ctx, sub_command: str = ''):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         client_commands = {}
         for command in self.client.commands:
             client_commands[f'{command}'] = [command.description, command.aliases, command.usage]
@@ -114,16 +116,22 @@ class Basic(commands.Cog, name='basic'):
     @commands.command(name='hello', description='hello', usage='hello')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def hello(self, ctx):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         await ctx.send(f'Hello, {ctx.author.name}.')
 
     @commands.command(name='say', description='make the bot say stuff', usage='say <msg>')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def say(self, ctx, *, msg):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         await ctx.send(msg)
 
     @commands.command(name='latency', description='latency of the bot', usage='latency', aliases=['ping'])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def latency(self, ctx):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
         await ctx.send(f'This number really doesn\'t matter: `{round(self.client.latency * 1000, 1)}` ms.')
 
 
