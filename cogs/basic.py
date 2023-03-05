@@ -115,7 +115,7 @@ class Basic(commands.Cog, name='basic'):
             title = sub_command
             description = command_description
             name = ''
-            val = f'Aliases: {utils.help_categories(command_aliases)}\nUsage: {command_usage}\n[] = optional field'
+            val = f'Aliases: {utils.help_categories(command_aliases)}\nUsage: `{command_usage}`\n[] = optional field'
 
         embed = discord.Embed(title=title,
                               description=description,
