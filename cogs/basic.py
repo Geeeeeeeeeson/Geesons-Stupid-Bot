@@ -66,7 +66,6 @@ class Basic(commands.Cog, name='basic'):
 
         if file_storage.user_data[message.author.id]['is_banned'] \
                 and message.content.startswith(file_storage.guild_data[message.guild.id]['prefix']):
-            await message.channel.send('You have been bot banned, you may not use any commands during your ban.')
             return
 
     @commands.command(name='help', aliases=['commands', 'command', 'cmd', 'cmds', 'ls'],
@@ -85,33 +84,45 @@ class Basic(commands.Cog, name='basic'):
                        'games': 'just some casual games you can play.', 'image': 'images using pillow',
                        'moderation': 'moderation to make your server better',
                        'admin': 'commands only for bot admins', }
-        if sub_command == '':
-            embed = discord.Embed(title='Commands',
-                                  description=f'for more information do `help <category>`\n[invite link]({constants.INVITE_LINK})',
-                                  color=constants.random_color())
-            embed.add_field(name='Categories', value=utils.help_categories(list(client_cogs)), inline=False)
-            embed.set_thumbnail(url=self.client.user.avatar.url)
-            await ctx.send(embed=embed)
+
+        if not sub_command:
+
+            title = 'Commands'
+            description=f'for more information do `help <category>`\n[invite link]({constants.INVITE_LINK})'
+            name = 'Categories'
+            val = utils.help_categories(list(client_cogs))
+
+        elif sub_command not in client_cogs and sub_command not in client_commands:
+            await ctx.send('That is not a valid command or category.')
+            return
+
         elif sub_command.lower() in client_cogs:
+
             cog = self.client.get_cog(sub_command.lower())
             cmd = [x.name for x in cog.get_commands()]
-            embed = discord.Embed(title=f'{sub_command.lower()[0].upper()}{sub_command.lower()[1:]}',
-                                  description=f'for more information do `help <command-name>`',
-                                  color=constants.random_color())
-            embed.add_field(name='Commands', value=utils.help_categories(cmd), inline=False)
-            await ctx.send(embed=embed)
-        elif sub_command in client_commands:
+
+            title = f'{sub_command.lower()[0].upper()}{sub_command.lower()[1:]}'
+            description = f'for more information do `help <command-name>`'
+            name = 'Commands'
+            val = utils.help_categories(cmd)
+
+        elif sub_command.lower() in client_commands:
+
             command_description = client_commands[sub_command][0]
             command_aliases = client_commands[sub_command][1]
             command_usage = client_commands[sub_command][2]
-            embed = discord.Embed(title=sub_command, description=command_description,
-                                  color=constants.random_color())
-            embed.add_field(name='Aliases', value=utils.help_categories(command_aliases))
-            embed.add_field(name='Usage', value=command_usage, inline=False)
-            embed.set_footer(text='[] = optional field', icon_url='')
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send('That is not a valid command or category.')
+
+            title = sub_command
+            description = command_description
+            name = ''
+            val = f'Aliases: {utils.help_categories(command_aliases)}\nUsage: {command_usage}\n[] = optional field'
+
+        embed = discord.Embed(title=title,
+                              description=description,
+                              color=constants.random_color())
+        embed.add_field(name=name, value=val, inline=False)
+        embed.set_thumbnail(url=self.client.user.avatar.url)
+        await ctx.send(embed=embed)
 
     @commands.command(name='hello', description='hello', usage='hello')
     @commands.cooldown(1, 5, commands.BucketType.user)

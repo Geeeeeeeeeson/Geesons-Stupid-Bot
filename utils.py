@@ -12,24 +12,24 @@ def help_categories(ls: list):
 
 def bend(w: int, s: str):
     """New Line after certain amount of characters"""
-    s = s.split(" ")
+    s = s.split(' ')
     lst = filter(None, s)
-    new_lst = [""]
+    new = []
     i = 0
     for word in lst:
-        line = new_lst[i] + " " + word
-        if new_lst[i] == "":
+        line = new[i] + ' ' + word
+        if not new[i]:
             line = word
         if len(word) > w:
             while len(word) > w:
-                new_lst.append(word[:w])
+                new.append(word[:w])
                 i += 1
                 word = word[w:]
             i += 1
-            new_lst.append(word)
+            new.append(word)
         elif len(line) > w:
-            new_lst.append(word)
+            new.append(word)
             i += 1
         else:
-            new_lst[i] = line
-    return "\n".join(new_lst)
+            new[i] = line
+    return '\n'.join(new)

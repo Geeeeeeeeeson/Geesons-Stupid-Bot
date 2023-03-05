@@ -5,8 +5,10 @@ import discord
 from discord.ext import commands
 
 import os
+import time
 
 from file_storage import user_data
+import utils
 
 
 class Admin(commands.Cog, name='admin'):
@@ -44,7 +46,7 @@ class Admin(commands.Cog, name='admin'):
                 user_data[user.id]['badge'].remove('admin')
             await ctx.channel.send(f'Successfully deoped **{user}**.')
 
-    @commands.command(name='botban', description='bot ban people', usage='botban <user>')
+    @commands.command(name='botban', description='ban people from using this bot', usage='botban <user>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botban(self, ctx, user: discord.User):
         if user_data[ctx.author.id]['is_admin']:
