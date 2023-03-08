@@ -121,7 +121,6 @@ class Basic(commands.Cog, name='basic'):
                               description=description,
                               color=constants.random_color())
         embed.add_field(name=name, value=val, inline=False)
-        embed.set_thumbnail(url=self.client.user.avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(name='hello', description='hello', usage='hello')

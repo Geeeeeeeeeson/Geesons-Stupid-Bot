@@ -37,8 +37,7 @@ def custom_prefix(client, message):
         return 'bot '
 
 
-client = commands.Bot(command_prefix=custom_prefix, intents=intents)
-client.remove_command('help')
+client = commands.Bot(command_prefix=custom_prefix, help_command=None, intents=intents)
 
 
 async def load_ext():
