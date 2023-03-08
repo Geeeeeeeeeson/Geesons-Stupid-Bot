@@ -16,15 +16,22 @@ def save_all():
         f.write(repr(user_data))
 
 
-def guild_if_empty(guild_id: int):
-    if guild_id not in guild_data:
+def guild_update_with_defaults(guild_id: int):
+    if guild_id not in guild_data: ## initialize guild data
         guild_data[guild_id] = {'prefix': 'bot ',
                                 'antidelete': [],
                                 'log': []}
+    ## allows for new keys to be added without breaking the bot
+    if 'prefix' not in guild_data[guild_id]:
+        guild_data[guild_id]['prefix'] = 'bot '
+    if 'antidelete' not in guild_data[guild_id]:
+        guild_data[guild_id]['antidelete'] = []
+    if 'log' not in guild_data[guild_id]:
+        guild_data[guild_id]['log'] = []
 
 
-def user_if_empty(user_id: int):
-    if user_id not in user_data:
+def user_update_with_defaults(user_id: int):
+    if user_id not in user_data: ## initialize user data
         user_data[user_id] = {'economy':
                                       {'money':
                                            {'wallet': 0,
@@ -43,3 +50,12 @@ def user_if_empty(user_id: int):
                                   'badge': [],
                                   'is_banned': False,
                                   'is_admin': False, }
+    ## allows for new keys to be added without breaking the bot
+    if 'xp' not in user_data[user_id]:
+        user_data[user_id]['xp'] = 0
+    if 'badge' not in user_data[user_id]:
+        user_data[user_id]['badge'] = []
+    if 'is_banned' not in user_data[user_id]:
+        user_data[user_id]['is_banned'] = False
+    if 'is_admin' not in user_data[user_id]:
+        user_data[user_id]['is_admin'] = False

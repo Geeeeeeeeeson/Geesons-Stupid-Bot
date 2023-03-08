@@ -61,8 +61,8 @@ class Basic(commands.Cog, name='basic'):
         if message.channel.type == discord.ChannelType.private:
             return
 
-        file_storage.guild_if_empty(message.guild.id)
-        file_storage.user_if_empty(message.author.id)
+        file_storage.guild_update_with_defaults(message.guild.id)
+        file_storage.user_update_with_defaults(message.author.id)
 
         if file_storage.user_data[message.author.id]['is_banned'] \
                 and message.content.startswith(file_storage.guild_data[message.guild.id]['prefix']):
