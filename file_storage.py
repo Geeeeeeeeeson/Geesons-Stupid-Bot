@@ -5,7 +5,7 @@ import ast
 
 GUILD_DATA = {'prefix': 'bot ',
               'antidelete': [],
-              'log': []}
+              'log': [], }
 
 
 USER_DATA = {'economy':
@@ -44,7 +44,7 @@ def save_all():
 
 def _update_with_defaults(data: dict, default: dict):
     for key, value in default.items():
-        if value is dict:
+        if isinstance(value, dict):
             if key not in data:
                 data[key] = {}
             _update_with_defaults(data[key], value)
