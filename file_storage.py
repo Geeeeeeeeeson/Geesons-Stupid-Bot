@@ -2,6 +2,32 @@
 
 import ast
 
+
+GUILD_DATA = {'prefix': 'bot ',
+              'antidelete': [],
+              'log': []}
+
+
+USER_DATA = {'economy':
+                 {'money':
+                      {'wallet': 0,
+                       'bank': 0,
+                       'level': 1, },
+                  'job':
+                      {'id': -1,
+                       'salary': 0,
+                       'last_worked': -1,
+                       'quit_time': -1, },
+                  'login': {'daily': -1,
+                            'weekly': -1, },
+                  'inventory': {},
+                  },
+             'xp': 0,
+             'badge': [],
+             'is_banned': False,
+             'is_admin': False, }
+
+
 with open('./data/guild_data', 'r') as f:
     guild_data = ast.literal_eval(f.read())
 
@@ -16,46 +42,19 @@ def save_all():
         f.write(repr(user_data))
 
 
+def _update_with_defaults(data: dict, default: dict):
+    for key, value in default.items():
+        if value is dict:
+            if key not in data:
+                data[key] = {}
+            _update_with_defaults(data[key], value)
+        if key not in data:
+            data[key] = value
+
+
 def guild_update_with_defaults(guild_id: int):
-    if guild_id not in guild_data: ## initialize guild data
-        guild_data[guild_id] = {'prefix': 'bot ',
-                                'antidelete': [],
-                                'log': []}
-    ## allows for new keys to be added without breaking the bot
-    if 'prefix' not in guild_data[guild_id]:
-        guild_data[guild_id]['prefix'] = 'bot '
-    if 'antidelete' not in guild_data[guild_id]:
-        guild_data[guild_id]['antidelete'] = []
-    if 'log' not in guild_data[guild_id]:
-        guild_data[guild_id]['log'] = []
+    _update_with_defaults(guild_data[guild_id], GUILD_DATA)
 
 
 def user_update_with_defaults(user_id: int):
-    if user_id not in user_data: ## initialize user data
-        user_data[user_id] = {'economy':
-                                      {'money':
-                                           {'wallet': 0,
-                                            'bank': 0,
-                                            'level': 1, },
-                                       'job':
-                                           {'id': -1,
-                                            'salary': 0,
-                                            'last_worked': -1,
-                                            'quit_time': -1, },
-                                       'login': {'daily': -1,
-                                                 'weekly': -1, },
-                                       'inventory': {},
-                                       },
-                                  'xp': 0,
-                                  'badge': [],
-                                  'is_banned': False,
-                                  'is_admin': False, }
-    ## allows for new keys to be added without breaking the bot
-    if 'xp' not in user_data[user_id]:
-        user_data[user_id]['xp'] = 0
-    if 'badge' not in user_data[user_id]:
-        user_data[user_id]['badge'] = []
-    if 'is_banned' not in user_data[user_id]:
-        user_data[user_id]['is_banned'] = False
-    if 'is_admin' not in user_data[user_id]:
-        user_data[user_id]['is_admin'] = False
+    _update_with_defaults(user_data[user_id], USER_DATA)
