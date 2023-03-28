@@ -4,7 +4,7 @@ import random
 
 INVITE_LINK = 'https://discord.com/oauth2/authorize?client_id=695083835708145734&permissions=21474836398&scope=bot'
 
-VERSION = '2.0.0-dev2'
+VERSION = '2.0.0-dev3'
 
 
 class Color:
