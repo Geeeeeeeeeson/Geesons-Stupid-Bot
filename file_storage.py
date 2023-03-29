@@ -23,6 +23,7 @@ USER_DATA = {'economy':
                   'inventory': {},
                   },
              'xp': 0,
+             'xp_cooldown': -1,
              'badge': [],
              'is_banned': False,
              'is_admin': False, }
