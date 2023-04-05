@@ -69,7 +69,7 @@ class Admin(commands.Cog, name='admin'):
         if user not in user_data:
             user_update_with_defaults(user.id)
         if user_data[ctx.author.id]['is_admin']:
-            utils.add_xp(user.id, amount)
+            utils.add_xp(user.id, amount, cooldown=False)
             await ctx.channel.send(f'Successfully added **{amount}** xp to **{user}**.')
 
 
