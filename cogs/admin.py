@@ -5,9 +5,8 @@ import discord
 from discord.ext import commands
 
 import os
-import time
 
-from file_storage import user_data
+from file_storage import user_data, user_update_with_defaults
 import utils
 
 
@@ -64,6 +63,14 @@ class Admin(commands.Cog, name='admin'):
                 await ctx.channel.send(f'Successfully pardoned **{user}**.')
             else:
                 await ctx.channel.send('User is not bot banned.')
+
+    @commands.command(name='addxp', description='add xp to a user', usage='addxp <user> <amount>')
+    async def addxp(self, ctx, user: discord.User, amount: int):
+        if user not in user_data:
+            user_update_with_defaults(user.id)
+        if user_data[ctx.author.id]['is_admin']:
+            utils.add_xp(user.id, amount)
+            await ctx.channel.send(f'Successfully added **{amount}** xp to **{user}**.')
 
 
 async def setup(client):

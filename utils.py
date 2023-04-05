@@ -1,5 +1,9 @@
 """Utilities"""
 
+import time
+
+import file_storage
+
 
 def help_categories(ls: list):
     """Add code block to a list"""
@@ -33,3 +37,13 @@ def bend(w: int, s: str):
         else:
             new[i] = line
     return '\n'.join(new)
+
+
+def add_xp(user_id: int, xp: int, cooldown: bool = True):
+    user = file_storage.user_data[user_id]
+    user['xp'] += xp
+    user['xp_cooldown'] = time.time() if cooldown else user['xp_cooldown']
+    if user['xp'] >= user['next_level']:
+        user['xp'] -= user['next_level']
+        user['level'] += 1
+        user['next_level'] = int((100 * (user['level'] ** 2)) / 2)

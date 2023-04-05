@@ -1,10 +1,11 @@
 """Basic bot commands"""
-
+import time
 
 import discord
 from discord.ext import commands
 
 import math
+import random
 
 import constants
 import utils
@@ -67,6 +68,9 @@ class Basic(commands.Cog, name='basic'):
         if file_storage.user_data[message.author.id]['is_banned'] \
                 and message.content.startswith(file_storage.guild_data[message.guild.id]['prefix']):
             return
+
+        if file_storage.user_data[message.author.id]['xp_cooldown'] + 15 <= time.time():
+            utils.add_xp(message.author.id, random.randint(1, 5))
 
     @commands.command(name='help', aliases=['commands', 'command', 'cmd', 'cmds', 'ls'],
                       description='Help command, shows all commands.', usage='help [*sub_command]')
@@ -143,6 +147,23 @@ class Basic(commands.Cog, name='basic'):
         if file_storage.user_data[ctx.author.id]['is_banned']:
             return
         await ctx.send(f'This number really doesn\'t matter: `{round(self.client.latency * 1000, 1)}` ms.')
+
+    @commands.command(name='xp', description='shows user\'s xp', usage='xp [user]', aliases=['level', 'lvl'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def xp(self, ctx, user: discord.Member = None):
+        if file_storage.user_data[ctx.author.id]['is_banned']:
+            return
+        user = ctx.author if user is None else user
+        if user not in file_storage.user_data:
+            file_storage.user_update_with_defaults(user.id)
+        level = file_storage.user_data[user.id]['level']
+        xp = file_storage.user_data[user.id]['xp']
+        next_level = file_storage.user_data[user.id]['next_level']
+        percent = round(xp / next_level * 100, 2)
+        embed = discord.Embed(color=constants.random_color())
+        embed.set_author(name=f'{user.name}\'s XP', icon_url=user.avatar.url)
+        embed.add_field(name='', value=f'**Level**: {level}\n**XP**: {xp}/{next_level} ({percent}%)')
+        await ctx.send(embed=embed)
 
 
 async def setup(client):

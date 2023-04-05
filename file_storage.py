@@ -23,6 +23,8 @@ USER_DATA = {'economy':
                   'inventory': {},
                   },
              'xp': 0,
+             'next_level': 100,
+             'level': 0,
              'xp_cooldown': -1,
              'badge': [],
              'is_banned': False,
@@ -54,8 +56,12 @@ def _update_with_defaults(data: dict, default: dict):
 
 
 def guild_update_with_defaults(guild_id: int):
+    if guild_id not in guild_data:
+        guild_data[guild_id] = {}
     _update_with_defaults(guild_data[guild_id], GUILD_DATA)
 
 
 def user_update_with_defaults(user_id: int):
+    if user_id not in user_data:
+        user_data[user_id] = {}
     _update_with_defaults(user_data[user_id], USER_DATA)
