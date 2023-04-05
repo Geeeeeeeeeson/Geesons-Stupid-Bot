@@ -1,11 +1,11 @@
 """Basic bot commands"""
-import time
 
 import discord
 from discord.ext import commands
 
 import math
 import random
+import time
 
 import constants
 import utils
@@ -41,7 +41,7 @@ class Basic(commands.Cog, name='basic'):
                 minutes = math.floor(error.retry_after / 60)
                 sec = f'{error.retry_after - (minutes * 60):.1f}'
                 return await ctx.send(embed=discord.Embed(color=constants.random_color(),
-                                                          description=f'This command is currenly on cooldown, Try again after **{minutes}m {sec}s**.'))
+                                                          description=f'This command is currently on cooldown, Try again after **{minutes}m {sec}s**.'))
             await ctx.send(embed=discord.Embed(color=constants.random_color(),
                                                description=f'This command is currently on cooldown, Try again after {error.retry_after:.1f}s.'))
         elif error_type == commands.MissingPermissions:
@@ -80,7 +80,7 @@ class Basic(commands.Cog, name='basic'):
             return
         client_commands = {}
         for command in self.client.commands:
-            client_commands[f'{command}'] = [command.description, command.aliases, command.usage]
+            client_commands[command] = [command.description, command.aliases, command.usage]
         client_cogs = {'basic': 'basic commands',
                        'configuration': 'configurations',
                        'currency': 'Currency commands',
@@ -156,10 +156,12 @@ class Basic(commands.Cog, name='basic'):
         user = ctx.author if user is None else user
         if user not in file_storage.user_data:
             file_storage.user_update_with_defaults(user.id)
+
         level = file_storage.user_data[user.id]['level']
         xp = file_storage.user_data[user.id]['xp']
         next_level = file_storage.user_data[user.id]['next_level']
         percent = round(xp / next_level * 100, 2)
+
         embed = discord.Embed(color=constants.random_color())
         embed.set_author(name=f'{user.name}\'s XP', icon_url=user.avatar.url)
         embed.add_field(name='', value=f'**Level**: {level}\n**XP**: {xp}/{next_level} ({percent}%)')

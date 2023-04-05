@@ -40,6 +40,7 @@ def bend(w: int, s: str):
 
 
 def add_xp(user_id: int, xp: int, cooldown: bool = True):
+    """Add xp to user"""
     user = file_storage.user_data[user_id]
     user['xp'] += xp
     user['xp_cooldown'] = time.time() if cooldown else user['xp_cooldown']

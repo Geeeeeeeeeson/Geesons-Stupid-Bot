@@ -21,21 +21,18 @@ class Configuration(commands.Cog, name='configuration'):
     async def serverinfo(self, ctx):
         if file_storage.user_data[ctx.author.id]['is_banned']:
             return
-        if not ctx.guild.features:
-            features = 'None'
-        else:
-            features = '\n'.join(ctx.guild.features)
+
+        features = 'None' if not ctx.guild.features else '\n'.join(ctx.guild.features)
         channel_amount = len(ctx.guild.text_channels)
         vc_amount = len(ctx.guild.voice_channels)
-        level2fa = {discord.MFALevel.require_2fa: "Enabled",
-                    discord.MFALevel.disabled: 'Disabled'}
         creation_date = math.floor(ctx.guild.created_at.timestamp())
+
         embed = discord.Embed(title='Server Info', color=constants.random_color())
         embed.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
         embed.add_field(name='Basic',
-                        value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}')
+                        value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}\n**Boosts:** {ctx.guild.premium_subscription_count}')
         embed.add_field(name='Security',
-                        value=f'**2fa:** {level2fa[ctx.guild.mfa_level]}\n**Verification Level:** {ctx.guild.verification_level}')
+                        value=f'**2fa:** {ctx.guild.mfa_level.name}\n**Verification Level:** {ctx.guild.verification_level}')
         embed.add_field(name='Features', value=f'{features}', inline=False)
         embed.set_thumbnail(url=ctx.guild.icon.url)
         await ctx.channel.send(embed=embed)
@@ -48,11 +45,13 @@ class Configuration(commands.Cog, name='configuration'):
         user = ctx.author if user is None else user
         if user not in file_storage.user_data:
             file_storage.user_update_with_defaults(user.id)
+
         xp = file_storage.user_data[user.id]['xp']
         level = file_storage.user_data[user.id]['level']
         next_level = file_storage.user_data[user.id]['next_level']
         xp_percentage = round((xp / next_level) * 100, 2)
         creation_date = math.floor(user.created_at.timestamp())
+
         embed = discord.Embed(title='User Info', color=constants.random_color())
         embed.set_author(name=user, icon_url=user.avatar.url)
         embed.add_field(name='General Information', value=f'**ID**: {user.id}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)')
