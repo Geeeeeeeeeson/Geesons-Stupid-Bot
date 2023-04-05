@@ -51,7 +51,7 @@ class Configuration(commands.Cog, name='configuration'):
         xp = file_storage.user_data[user.id]['xp']
         level = file_storage.user_data[user.id]['level']
         next_level = file_storage.user_data[user.id]['next_level']
-        xp_percentage = int((xp / next_level) * 100)
+        xp_percentage = round((xp / next_level) * 100, 2)
         creation_date = math.floor(user.created_at.timestamp())
         embed = discord.Embed(title='User Info', color=constants.random_color())
         embed.set_author(name=user, icon_url=user.avatar.url)
