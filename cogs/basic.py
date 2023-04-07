@@ -83,7 +83,7 @@ class Basic(commands.Cog, name='basic'):
             return
         client_commands = {}
         for command in self.client.commands:
-            client_commands[command] = [command.description, command.aliases, command.usage]
+            client_commands[f'{command}'] = [command.description, command.aliases, command.usage]
         client_cogs = {'basic': 'basic commands',
                        'configuration': 'configurations',
                        'currency': 'Currency commands',
@@ -95,13 +95,9 @@ class Basic(commands.Cog, name='basic'):
         if not sub_command:
 
             title = 'Commands'
-            description=f'for more information do `help <category>`\n[invite link]({constants.INVITE_LINK})'
+            description = f'for more information do `help <category>`\n[invite link]({constants.INVITE_LINK})'
             name = 'Categories'
             val = utils.help_categories(list(client_cogs))
-
-        elif sub_command not in client_cogs and sub_command not in client_commands:
-            await ctx.send('That is not a valid command or category.')
-            return
 
         elif sub_command.lower() in client_cogs:
 
@@ -123,6 +119,10 @@ class Basic(commands.Cog, name='basic'):
             description = command_description
             name = ''
             val = f'Aliases: {utils.help_categories(command_aliases)}\nUsage: `{command_usage}`\n[] = optional field'
+
+        else:
+            await ctx.send('That is not a valid command or category.')
+            return
 
         embed = discord.Embed(title=title,
                               description=description,
