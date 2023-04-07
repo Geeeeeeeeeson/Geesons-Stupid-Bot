@@ -47,6 +47,9 @@ class Basic(commands.Cog, name='basic'):
         elif error_type == commands.MissingPermissions:
             await ctx.send(
                 f'You do not have the permissions necessary to execute this command. Needed: {error.missing_perms}')
+        elif error_type == commands.BotMissingPermissions:
+            await ctx.send(
+                f'I do not have the permissions necessary to execute this command. Needed: {error.missing_perms}')
         elif error_type == commands.MissingRequiredArgument:
             await ctx.send(
                 f'```\n[Error] Missing Argument: {error}\n\n----- Usage is below -----\n{ctx.command.usage}\n\n\n* = optional field```')
