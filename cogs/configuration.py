@@ -19,8 +19,6 @@ class Configuration(commands.Cog, name='configuration'):
                       description='check server information', usage='serverinfo')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def serverinfo(self, ctx):
-        if file_storage.user_data[ctx.author.id]['is_banned']:
-            return
 
         features = 'None' if not ctx.guild.features else '\n'.join(ctx.guild.features)
         channel_amount = len(ctx.guild.text_channels)
@@ -40,8 +38,7 @@ class Configuration(commands.Cog, name='configuration'):
     @commands.command(name='userinfo', aliases=['user'], description='check user information', usage='userinfo <user>')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def userinfo(self, ctx, user: discord.User = None):
-        if file_storage.user_data[ctx.author.id]['is_banned']:
-            return
+
         user = ctx.author if user is None else user
         if user not in file_storage.user_data:
             file_storage.user_update_with_defaults(user.id)
