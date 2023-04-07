@@ -108,6 +108,28 @@ class Moderation(commands.Cog, name='moderation'):
         await self.client.get_channel(ctx.channel.id).edit(reason='custom slowmode', slowmode_delay=int(slowmode))
         await ctx.channel.send(f'Set slowmode of <#{ctx.channel.id}> to **{slowmode}** seconds.')
 
+    @commands.command(name='lock', description='lock the channel', usage='lock [channel]')
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def lock(self, ctx, channel: discord.TextChannel = None):
+        channel = channel or ctx.channel
+        if not channel.permissions_for(ctx.guild.default_role).send_messages:
+            await ctx.channel.send(f'<#{ctx.channel.id}> is already locked.')
+            return
+        await channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await ctx.channel.send(f'Locked <#{ctx.channel.id}>.')
+
+    @commands.command(name='unlock', description='unlock a channel', usage='unlock [channel]')
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def unlock(self, ctx, channel: discord.TextChannel = None):
+        channel = channel or ctx.channel
+        if channel.permissions_for(ctx.guild.default_role).send_messages:
+            await ctx.channel.send(f'<#{ctx.channel.id}> is not locked.')
+            return
+        await channel.set_permissions(ctx.guild.default_role, send_messages=True)
+        await ctx.channel.send(f'Unlocked <#{ctx.channel.id}>.')
+
 
 async def setup(client):
     await client.add_cog(Moderation(client))
