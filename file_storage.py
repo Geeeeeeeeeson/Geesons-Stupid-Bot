@@ -24,7 +24,7 @@ USER_DATA = {'economy':
                   },
              'xp': 0,
              'next_level': 100,
-             'level': 0,
+             'level': 1,
              'xp_cooldown': -1,
              'badge': [],
              'is_banned': False,
