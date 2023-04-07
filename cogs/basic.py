@@ -83,7 +83,7 @@ class Basic(commands.Cog, name='basic'):
             return
         client_commands = {}
         for command in self.client.commands:
-            client_commands[f'{command}'] = [command.description, command.aliases, command.usage]
+            client_commands[command.name] = [command.description, command.aliases, command.usage]
         client_cogs = {'basic': 'basic commands',
                        'configuration': 'configurations',
                        'currency': 'Currency commands',
