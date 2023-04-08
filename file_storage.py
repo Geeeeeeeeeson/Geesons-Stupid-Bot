@@ -12,7 +12,8 @@ USER_DATA = {'economy':
                  {'money':
                       {'wallet': 0,
                        'bank': 0,
-                       'level': 1, },
+                       'level': 1,
+                       'bank_limit': 5000, },
                   'job':
                       {'id': -1,
                        'salary': 0,

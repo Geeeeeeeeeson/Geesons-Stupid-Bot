@@ -9,6 +9,7 @@ import random
 from english_words import english_words_lower_set
 
 import file_storage
+import utils
 
 
 class Game(commands.Cog, name='games'):
@@ -67,7 +68,8 @@ class Game(commands.Cog, name='games'):
                     invalid_char.append(guess)
                 await hangman_header.edit(
                     content=f'Time to play hangman:\nInvaild Characters: {" ".join(invalid_char)}\n{" ".join(display)}')
-        await ctx.channel.send(f'🥳 **GG, the word was `{answer}`** 🥳')
+        utils.add_xp(ctx.author.id, random.randint(30, 50), cooldown=False)
+        await ctx.send(f'🥳 **GG, the word was `{answer}`** 🥳')
 
 
 async def setup(client):

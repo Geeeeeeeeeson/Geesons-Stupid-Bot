@@ -40,19 +40,12 @@ class Configuration(commands.Cog, name='configuration'):
     async def userinfo(self, ctx, user: discord.User = None):
 
         user = ctx.author if user is None else user
-        if user not in file_storage.user_data:
-            file_storage.user_update_with_defaults(user.id)
 
-        xp = file_storage.user_data[user.id]['xp']
-        level = file_storage.user_data[user.id]['level']
-        next_level = file_storage.user_data[user.id]['next_level']
-        xp_percentage = round((xp / next_level) * 100, 2)
         creation_date = math.floor(user.created_at.timestamp())
 
         embed = discord.Embed(title='User Info', color=constants.random_color())
         embed.set_author(name=user, icon_url=user.avatar.url)
         embed.add_field(name='General Information', value=f'**ID**: {user.id}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)')
-        embed.add_field(name='Geeson\'s Stupid Bot Statistics', value=f'**Level:** {level}\n**XP:** {xp}/{next_level} ({xp_percentage}%)')
         embed.set_thumbnail(url=user.avatar.url)
         await ctx.channel.send(embed=embed)
 

@@ -86,7 +86,7 @@ class Basic(commands.Cog, name='basic'):
             client_commands[command.name] = [command.description, command.aliases, command.usage]
         client_cogs = {'basic': 'basic commands',
                        'configuration': 'configurations',
-                       'currency': 'Currency commands',
+                       'economy': 'economy commands',
                        'fun': 'fun commands that are really not that fun',
                        'games': 'just some casual games you can play.', 'image': 'images using pillow',
                        'moderation': 'moderation to make your server better',
@@ -167,7 +167,7 @@ class Basic(commands.Cog, name='basic'):
 
         embed = discord.Embed(color=constants.random_color())
         embed.set_author(name=f'{user.name}\'s XP', icon_url=user.avatar.url)
-        embed.add_field(name='', value=f'**Level**: {level}\n**XP**: {xp}/{next_level} ({percent}%)')
+        embed.add_field(name='', value=f'**Level**: {level:,}\n**XP**: {xp:,}/{next_level:,} ({percent}%)')
         await ctx.send(embed=embed)
 
 

@@ -17,8 +17,6 @@ class Fun(commands.Cog, name='fun'):
                       aliases=['magic8ball', 'magicball', 'ball'])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def eightball(self, ctx, *, msg):
-        if file_storage.user_data[ctx.author.id]['is_banned']:
-            return
         await ctx.send(random.choice(['Try asking again later.',
                                       'Not sure.',
                                       'Think harder.',
@@ -41,8 +39,6 @@ class Fun(commands.Cog, name='fun'):
                       usage='backwards <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def backwards(self, ctx, *, msg):
-        if file_storage.user_data[ctx.author.id]['is_banned']:
-            return
         await ctx.send(msg[::-1])
 
     @commands.command(name='impostor',
@@ -50,8 +46,6 @@ class Fun(commands.Cog, name='fun'):
                       usage='impostor <user> <message>')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def impostor(self, ctx, i_user: discord.User, *, msg):
-        if file_storage.user_data[ctx.author.id]['is_banned']:
-            return
         hooks = await ctx.channel.webhooks()
         hook = discord.utils.get(hooks, name='Geeson\'s Stupid Bot')
         if hook is None:
