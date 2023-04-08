@@ -21,7 +21,8 @@ USER_DATA = {'economy':
                        'quit_time': -1, },
                   'login': {'daily': -1,
                             'weekly': -1, },
-                  'inventory': {},
+                  'inventory':
+                      {'pickaxe': {'has': False, 'level': 1}, }
                   },
              'xp': 0,
              'next_level': 100,

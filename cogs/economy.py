@@ -6,6 +6,7 @@ from discord.ext import commands
 import math
 import random
 import time
+from typing import Optional
 
 import constants
 import file_storage
@@ -180,7 +181,29 @@ class Economy(commands.Cog, name='economy'):
         user_data[user.id]['economy']['money']['wallet'] += amount
         await ctx.send(f'You have successfully shared **{amount:,}** with **{user.name}**!')
 
+    @commands.command(name='inventory', aliases=['inv'], description='view your inventory and others', usage='inventory [user]')
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def inventory(self, ctx, user: Optional[discord.User] = None, page: Optional[int] = 1):
+        if user_data[ctx.author.id]['is_banned']:
+            return
 
+        user = user or ctx.author
+
+        if user.id not in user_data or not user_data[user.id]['economy']['inventory']:
+            file_storage.user_update_with_defaults(user.id)
+
+        inventory = user_data[user.id]['economy']['inventory']
+        total_pages = math.ceil(len(inventory) / 10)
+        page = page if page < total_pages else total_pages
+        items = [f'**{item}** x{inventory[item]["amount"]}' for i, item in enumerate(inventory) if
+                 item != 'pickaxe' and (page - 1) * 10 <= i < page * 10]
+
+        embed = discord.Embed(color=constants.random_color())
+        embed.set_author(name=f'{user.name}\'s Inventory', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
+        embed.add_field(name='Pickaxe', value=f'**Level:** {inventory["pickaxe"]["level"]}') if inventory['pickaxe']['has'] else None
+        embed.add_field(name='', value='\n'.join(items) if items else 'User has no items!', inline=False)
+        embed.set_footer(text=f'Page {page}/{total_pages}')
+        await ctx.send(embed=embed)
 
 
 
