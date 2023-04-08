@@ -92,7 +92,7 @@ class Economy(commands.Cog, name='economy'):
         if user_data[ctx.author.id]['economy']['login']['weekly'] > time.time():
             waittime = user_data[ctx.author.id]['economy']['login']['weekly'] - time.time()
             await ctx.send(embed=discord.Embed(color=constants.random_color(),
-                                                description=f'Please wait **{math.floor(waittime/86400)}d {math.floor(waittime/3600) % 24 if waittime % 24 != 23 else 23}h {math.ceil((waittime/60) % 60) if waittime % 60 != 59 else 59}m** to use this again!'))
+                                               description=f'Please wait **{math.floor(waittime/86400)}d {math.floor(waittime/3600) % 24 if waittime % 24 != 23 else 23}h {math.ceil((waittime/60) % 60) if waittime % 60 != 59 else 59}m** to use this again!'))
             return
 
         amount = random.randint(5000, 10000)
@@ -102,6 +102,7 @@ class Economy(commands.Cog, name='economy'):
         await ctx.send(f'You have claimed your weekly money of **{amount:,}**.')
 
     @commands.command(name='deposit', aliases=['dep'], description='deposit money into your bank', usage='deposit <amount>')
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def deposit(self, ctx, amount: str):
         if user_data[ctx.author.id]['is_banned']:
             return
@@ -126,6 +127,7 @@ class Economy(commands.Cog, name='economy'):
         await ctx.send(f'You have successfully deposited **{amount:,}** into your bank!')
 
     @commands.command(name='withdraw', aliases=['with', 'wd'], description='withdraw money from your bank', usage='withdraw <amount>')
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def withdraw(self, ctx, amount: str):
         if user_data[ctx.author.id]['is_banned']:
             return
@@ -145,6 +147,40 @@ class Economy(commands.Cog, name='economy'):
         user_data[ctx.author.id]['economy']['money']['wallet'] += amount
         user_data[ctx.author.id]['economy']['money']['bank'] -= amount
         await ctx.send(f'You have successfully withdrawn **{amount:,}** from your bank!')
+
+    @commands.command(name='share', aliases=['give'], description='share money with another user', usage='share <user> <amount>')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def share(self, ctx, user: discord.User, amount: str):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
+        if user.id == ctx.author.id:
+            await ctx.send('You can\'t share money with yourself!')
+            return
+        if user.bot:
+            await ctx.send('You can\'t share money with a bot!')
+            return
+
+        if user.id not in user_data:
+            file_storage.user_update_with_defaults(user.id)
+
+        wallet = user_data[ctx.author.id]['economy']['money']['wallet']
+
+        if amount.lower() == 'all' or amount.lower() == 'max':
+            amount = wallet
+        else:
+            try:
+                amount = int(amount)
+                amount = wallet if wallet < amount or amount < 0 else amount
+            except ValueError:
+                await ctx.send('That\'s not a valid amount!')
+                return
+
+        user_data[ctx.author.id]['economy']['money']['wallet'] -= amount
+        user_data[user.id]['economy']['money']['wallet'] += amount
+        await ctx.send(f'You have successfully shared **{amount:,}** with **{user.name}**!')
+
+
 
 
 
