@@ -50,7 +50,7 @@ class Fun(commands.Cog, name='fun'):
         hook = discord.utils.get(hooks, name='Geeson\'s Stupid Bot')
         if hook is None:
             hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=None, reason=None)
-        await hook.send(content=msg, username=i_user.name, avatar_url=i_user.avatar.url)
+        await hook.send(content=msg, username=i_user.name, avatar_url=i_user.avatar.url if i_user.avatar else i_user.default_avatar.url)
         await ctx.message.delete()
 
 

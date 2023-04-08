@@ -24,15 +24,14 @@ class Configuration(commands.Cog, name='configuration'):
         channel_amount = len(ctx.guild.text_channels)
         vc_amount = len(ctx.guild.voice_channels)
         creation_date = math.floor(ctx.guild.created_at.timestamp())
-
         embed = discord.Embed(title='Server Info', color=constants.random_color())
-        embed.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url)
+        embed.set_author(name=f'{ctx.guild}', icon_url=ctx.guild.icon.url if ctx.guild.icon else None)
         embed.add_field(name='Basic',
-                        value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** <@!{ctx.guild.owner_id}>\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}\n**Boosts:** {ctx.guild.premium_subscription_count}')
+                        value=f'**Member Count:** {ctx.guild.member_count}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)\n**Owner:** {ctx.guild.owner.metion}\n**Text Channels:** {channel_amount}\n**Voice Channels:** {vc_amount}\n**Boosts:** {ctx.guild.premium_subscription_count}')
         embed.add_field(name='Security',
                         value=f'**2fa:** {ctx.guild.mfa_level.name}\n**Verification Level:** {ctx.guild.verification_level}')
         embed.add_field(name='Features', value=f'{features}', inline=False)
-        embed.set_thumbnail(url=ctx.guild.icon.url)
+        embed.set_thumbnail(url=ctx.guild.icon.url if ctx.guild.icon else None)
         await ctx.channel.send(embed=embed)
 
     @commands.command(name='userinfo', aliases=['user'], description='check user information', usage='userinfo <user>')
@@ -44,9 +43,9 @@ class Configuration(commands.Cog, name='configuration'):
         creation_date = math.floor(user.created_at.timestamp())
 
         embed = discord.Embed(title='User Info', color=constants.random_color())
-        embed.set_author(name=user, icon_url=user.avatar.url)
+        embed.set_author(name=user, icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
         embed.add_field(name='General Information', value=f'**ID**: {user.id}\n**Creation Date:** <t:{creation_date}> (<t:{creation_date}:R>)')
-        embed.set_thumbnail(url=user.avatar.url)
+        embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
         await ctx.channel.send(embed=embed)
 
 

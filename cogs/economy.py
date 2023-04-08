@@ -40,11 +40,11 @@ class Economy(commands.Cog, name='economy'):
         badges = [constants.BADGES[i] for i in user_data[user.id]['badge']]
 
         embed = discord.Embed(color=constants.random_color())
-        embed.set_author(name=f'{user.name}\'s Profile', icon_url=user.avatar.url)
+        embed.set_author(name=f'{user.name}\'s Profile', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
         embed.add_field(name='Badges', value=f'{" ".join(badges)}', inline=False) if badges else None
         embed.add_field(name='XP', value=f'**Level**: {level:,}\n**XP**: {xp:,}/{next_level} ({xp_percentage}%)', inline=False)
         embed.add_field(name='Money', value=f'**Total**: {total:,}\n**Wallet**: {wallet:,}\n**Bank**: {bank:,}/{bank_limit:,} ({percentage}%)', inline=False)
-        embed.set_thumbnail(url=user.avatar.url)
+        embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(name='balance', aliases=['bal'], description='check the balance', usage='balance [user]')
@@ -62,7 +62,7 @@ class Economy(commands.Cog, name='economy'):
         total = wallet + bank
 
         embed = discord.Embed(description=f'Total Money: {total:,}', color=constants.random_color())
-        embed.set_author(name=f'{user.name}\'s Balance', icon_url=user.avatar.url)
+        embed.set_author(name=f'{user.name}\'s Balance', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
         embed.add_field(name='Wallet', value=f'{wallet:,}', inline=False)
         embed.add_field(name='Bank', value=f'{bank:,}/{bank_limit:,} ({percentage}%)', inline=False)
         await ctx.send(embed=embed)

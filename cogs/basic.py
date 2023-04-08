@@ -166,7 +166,7 @@ class Basic(commands.Cog, name='basic'):
         percent = round(xp / next_level * 100, 2)
 
         embed = discord.Embed(color=constants.random_color())
-        embed.set_author(name=f'{user.name}\'s XP', icon_url=user.avatar.url)
+        embed.set_author(name=f'{user.name}\'s XP', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
         embed.add_field(name='', value=f'**Level**: {level:,}\n**XP**: {xp:,}/{next_level:,} ({percent}%)')
         await ctx.send(embed=embed)
 
