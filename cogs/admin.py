@@ -6,6 +6,7 @@ from discord.ext import commands
 
 import os
 
+import constants
 from file_storage import user_data, user_update_with_defaults
 import utils
 
@@ -21,7 +22,7 @@ class Admin(commands.Cog, name='admin'):
         if user_data[ctx.author.id]['is_admin']:
             await ctx.channel.send(f'This doens\'t really mean anything but:\n`PID:` **{os.getpid()}**')
 
-    @commands.command(name='op', aliases=['operator'], description='bot admins', usage='admin <user>')
+    @commands.command(name='op', aliases=['operator'], description='bot admins', usage='op <user>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def op(self, ctx, user: discord.User):
         if user_data[ctx.author.id]['is_admin']:
@@ -71,6 +72,21 @@ class Admin(commands.Cog, name='admin'):
         if user_data[ctx.author.id]['is_admin']:
             utils.add_xp(user.id, amount, cooldown=False)
             await ctx.channel.send(f'Successfully added **{amount}** xp to **{user}**.')
+
+    @commands.command(name='addbadge', description='add a badge to a user', usage='addbadge <user> <badge>')
+    async def addbadge(self, ctx, user: discord.User, badge: str):
+        if user not in user_data:
+            user_update_with_defaults(user.id)
+        if user_data[ctx.author.id]['is_admin']:
+            if badge not in constants.BADGES:
+                await ctx.channel.send(f'Invalid badge. Valid badges are {utils.help_categories(constants.BADGES.keys())}')
+                return
+
+            if badge not in user_data[user.id]['badge']:
+                user_data[user.id]['badge'].append(badge)
+                await ctx.channel.send(f'Successfully added **{badge}** badge to **{user}**.')
+            else:
+                await ctx.channel.send('User already has that badge.')
 
 
 async def setup(client):

@@ -32,3 +32,6 @@ class Color:
 
 def random_color():
     return random.randint(0x00, 0xffffff)
+
+BADGES = {'admin': '<:bot_admin:817935714322612234>',
+          'one_year': '<:1Y:817883554150350848>', }
