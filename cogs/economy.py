@@ -22,6 +22,9 @@ class Economy(commands.Cog, name='economy'):
     @commands.command(name='profile', description='check the profile of a user', usage='profile [user]')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def profile(self, ctx, user: discord.User = None):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
         user = user or ctx.author
 
         if user not in user_data:
@@ -51,6 +54,9 @@ class Economy(commands.Cog, name='economy'):
     @commands.command(name='balance', aliases=['bal'], description='check the balance', usage='balance [user]')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def balance(self, ctx, user: discord.User = None):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
         user = user or ctx.author
 
         if user not in user_data:
@@ -195,16 +201,15 @@ class Economy(commands.Cog, name='economy'):
         inventory = user_data[user.id]['economy']['inventory']
         total_pages = math.ceil(len(inventory) / 10)
         page = page if page < total_pages else total_pages
-        items = [f'**{item}** x{inventory[item]["amount"]}' for i, item in enumerate(inventory) if
-                 item != 'pickaxe' and (page - 1) * 10 <= i < page * 10]
+        items = [f'**{item}** x{inventory[item]}' for i, item in enumerate(inventory) if
+                 item != 'pickaxe' and (page - 1) * 10 < i <= page * 10]
 
         embed = discord.Embed(color=constants.random_color())
         embed.set_author(name=f'{user.name}\'s Inventory', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
-        embed.add_field(name='Pickaxe', value=f'**Level:** {inventory["pickaxe"]["level"]}') if inventory['pickaxe']['has'] else None
+        embed.add_field(name='\u26cf\ufe0f Pickaxe', value=f'**Level:** {inventory["pickaxe"]["level"]}') if inventory['pickaxe']['has'] else None
         embed.add_field(name='', value='\n'.join(items) if items else 'User has no items!', inline=False)
         embed.set_footer(text=f'Page {page}/{total_pages}')
         await ctx.send(embed=embed)
-
 
 
 async def setup(client):
