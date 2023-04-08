@@ -46,7 +46,7 @@ class Economy(commands.Cog, name='economy'):
         embed = discord.Embed(color=constants.random_color())
         embed.set_author(name=f'{user.name}\'s Profile', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
         embed.add_field(name='Badges', value=f'{" ".join(badges)}', inline=False) if badges else None
-        embed.add_field(name='XP', value=f'**Level**: {level:,}\n**XP**: {xp:,}/{next_level} ({xp_percentage}%)', inline=False)
+        embed.add_field(name='XP', value=f'**Level**: {level:,}\n**XP**: {xp:,}/{next_level:,} ({xp_percentage}%)', inline=False)
         embed.add_field(name='Money', value=f'**Total**: {total:,}\n**Wallet**: {wallet:,}\n**Bank**: {bank:,}/{bank_limit:,} ({percentage}%)', inline=False)
         embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
         await ctx.send(embed=embed)
