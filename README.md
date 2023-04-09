@@ -8,6 +8,7 @@ Geeson's Stupid Bot is a discord bot written in discord.py v2. It's just a proje
 
 - Python 3.10 or higher
 - discord.py v2
+- [english_words](https://pypi.org/project/english-words/1.1.0/)
 
 ```bash
 git clone https://github.com/Gerseneck/Geesons-Stupid-Bot.git
