@@ -156,7 +156,7 @@ class Economy(commands.Cog, name='economy'):
         await ctx.send(f'You have successfully withdrawn **{amount:,}** from your bank!')
 
     @commands.command(name='share', aliases=['give'], description='share money with another user', usage='share <user> <amount>')
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def share(self, ctx, user: discord.User, amount: str):
         if user_data[ctx.author.id]['is_banned']:
             return
@@ -330,7 +330,51 @@ class Economy(commands.Cog, name='economy'):
         user_data[ctx.author.id]['economy']['inventory'][item_id] -= amount
         user_data[ctx.author.id]['economy']['money']['wallet'] += item['sell_price'] * amount
 
+    @commands.command(name='give-item', aliases=['gi', 'item-give', 'item'], description='give an item to a user', usage='give-item <user> <item> [amount]')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def give_item(self, ctx, user: discord.Member, item: str, amount: int = 1):
+        if user_data[ctx.author.id]['is_banned']:
+            return
 
+        if user.bot:
+            await ctx.send('You can\'t give items to bots!')
+            return
+        if user == ctx.author:
+            await ctx.send('You can\'t give items to yourself!')
+            return
+
+        item = item.lower().strip()
+
+        if item not in constants.INVENTORY:
+            await ctx.send('That\'s not a valid item!')
+            return
+
+        item_id = item
+        item = constants.INVENTORY[item]
+
+        if not item['shareable']:
+            await ctx.send(f'You can\'t share {item["emoji"]} {item["name"]}!')
+            return
+
+        if item_id not in user_data[ctx.author.id]['economy']['inventory']:
+            await ctx.send('You don\'t have that item!')
+            return
+        if user_data[ctx.author.id]['economy']['inventory'][item_id] == 0:
+            await ctx.send('You don\'t have that item!')
+            return
+        if user_data[ctx.author.id]['economy']['inventory'][item_id] < amount:
+            await ctx.send('You don\'t have that many items!')
+            return
+
+        if user.id not in user_data or not user_data[user.id]['economy']['inventory']:
+            file_storage.user_update_with_defaults(user.id)
+
+        if item_id not in user_data[user.id]['economy']['inventory']:
+            user_data[user.id]['economy']['inventory'][item_id] = 0
+        user_data[user.id]['economy']['inventory'][item_id] += amount
+        user_data[ctx.author.id]['economy']['inventory'][item_id] -= amount
+
+        await ctx.send(f'You have successfully given **{amount}x {item["emoji"]} {item["name"]}** to **{user.name}**.')
 
 
 async def setup(client):
