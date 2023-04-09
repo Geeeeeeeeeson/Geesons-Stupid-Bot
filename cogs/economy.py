@@ -201,8 +201,9 @@ class Economy(commands.Cog, name='economy'):
         inventory = user_data[user.id]['economy']['inventory']
         total_pages = math.ceil(len(inventory) / 10)
         page = page if page < total_pages else total_pages
-        items = [f'**{item}** x{inventory[item]}' for i, item in enumerate(inventory) if
-                 item != 'pickaxe' and (page - 1) * 10 < i <= page * 10]
+        items = [f'**{constants.INVENTORY[item]["emoji"]} {constants.INVENTORY[item]["name"]}** x{inventory[item]}'
+                 for i, item in enumerate(inventory) if item != 'pickaxe' and inventory[item] > 0 and
+                 item in constants.INVENTORY and (page - 1) * 10 < i <= page * 10]
 
         embed = discord.Embed(color=constants.random_color())
         embed.set_author(name=f'{user.name}\'s Inventory', icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
@@ -257,6 +258,79 @@ class Economy(commands.Cog, name='economy'):
                                     value=f'**Price:** {item_dict["price"]:,} coins', inline=False)
             embed.set_footer(text=f'Page {page}/{total_pages}')
             await ctx.send(embed=embed)
+
+    @commands.command(name='buy', description='buy an item from the shop', usage='buy <item> [amount]')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def buy(self, ctx, item: str, amount: int = 1):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
+        item = item.lower().strip()
+
+        if item not in constants.INVENTORY:
+            await ctx.send('That\'s not a valid item!')
+            return
+
+        item_id = item
+        item = constants.INVENTORY[item]
+        wallet = user_data[ctx.author.id]['economy']['money']['wallet']
+
+        if wallet < item['price'] * amount:
+            await ctx.send('You don\'t have enough money to buy that!')
+            return
+
+        if item_id == 'pickaxe':
+            if user_data[ctx.author.id]['economy']['inventory']['pickaxe']['has']:
+                await ctx.send('You already have a pickaxe!')
+                return
+            user_data[ctx.author.id]['economy']['inventory']['pickaxe']['has'] = True
+            await ctx.send(f'You have successfully bought a **{item["emoji"]} {item["name"]}**.')
+        else:
+            if item_id not in user_data[ctx.author.id]['economy']['inventory']:
+                user_data[ctx.author.id]['economy']['inventory'][item_id] = 0
+            user_data[ctx.author.id]['economy']['inventory'][item_id] += amount
+            await ctx.send(f'You have successfully bought **{amount}x {item["emoji"]} {item["name"]}**.')
+
+        user_data[ctx.author.id]['economy']['money']['wallet'] -= item['price'] * amount
+
+    @commands.command(name='sell', description='sell items from your inventory', usage='sell <item> [amount]')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def sell(self, ctx, item: str, amount: int = 1):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
+        item = item.lower().strip()
+
+        if item not in constants.INVENTORY:
+            await ctx.send('That\'s not a valid item!')
+            return
+
+        item_id = item
+        item = constants.INVENTORY[item]
+
+        if item_id == 'pickaxe':
+            user_data[ctx.author.id]['economy']['inventory']['pickaxe']['has'] = False
+            user_data[ctx.author.id]['economy']['money']['wallet'] += item['sell_price']
+            await ctx.send(f'You have successfully sold your **{item["emoji"]} {item["name"]}**.')
+            return
+
+        if item_id not in user_data[ctx.author.id]['economy']['inventory']:
+            await ctx.send('You don\'t have that item!')
+            return
+        if user_data[ctx.author.id]['economy']['inventory'][item_id] == 0:
+            await ctx.send('You don\'t have that item!')
+            return
+        if user_data[ctx.author.id]['economy']['inventory'][item_id] < amount:
+            await ctx.send('You don\'t have that many items!')
+            return
+        if not item['sellable']:
+            await ctx.send(f'You can\'t sell {item["emoji"]} {item["name"]}!')
+            return
+
+        user_data[ctx.author.id]['economy']['inventory'][item_id] -= amount
+        user_data[ctx.author.id]['economy']['money']['wallet'] += item['sell_price'] * amount
+
+
 
 
 async def setup(client):
