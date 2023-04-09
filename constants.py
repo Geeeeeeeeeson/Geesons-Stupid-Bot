@@ -36,4 +36,13 @@ def random_color():
 BADGES = {'admin': '<:bot_admin:817935714322612234>',
           'one_year': '<:1Y:817883554150350848>', }
 
-INVENTORY = {}
+## format {item: {name: str, description: str, price: int, emoji: str, rarity: str, type: str, sellable: bool, sell_price: int, usable: bool}}
+
+INVENTORY = {'pickaxe':
+                 {'name': 'Pickaxe', 'description': 'A pickaxe for mining.', 'price': 1200,
+                  'emoji': '\u26cf\ufe0f', 'rarity': 'common', 'type': 'tool',
+                  'sellable': True, 'sell_price': 100, 'usable': True},
+             'apple':
+                 {'name': 'Apple', 'description': 'A delicious apple.', 'price': 100,
+                  'emoji': '\U0001f34e', 'rarity': 'common', 'type': 'food',
+                  'sellable': False, 'sell_price': 0, 'usable': True},}

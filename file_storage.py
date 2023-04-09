@@ -22,7 +22,7 @@ USER_DATA = {'economy':
                   'login': {'daily': -1,
                             'weekly': -1, },
                   'inventory':
-                      {'pickaxe': {'has': False, 'level': 1}, }
+                      {'pickaxe': {'has': False, 'level': 1, 'mining': False}, }
                   },
              'xp': 0,
              'next_level': 100,

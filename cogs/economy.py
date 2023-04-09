@@ -187,7 +187,7 @@ class Economy(commands.Cog, name='economy'):
         user_data[user.id]['economy']['money']['wallet'] += amount
         await ctx.send(f'You have successfully shared **{amount:,}** with **{user.name}**!')
 
-    @commands.command(name='inventory', aliases=['inv'], description='view your inventory and others', usage='inventory [user]')
+    @commands.command(name='inventory', aliases=['inv'], description='view your inventory and others', usage='inventory [user] [page]')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def inventory(self, ctx, user: Optional[discord.User] = None, page: Optional[int] = 1):
         if user_data[ctx.author.id]['is_banned']:
@@ -210,6 +210,53 @@ class Economy(commands.Cog, name='economy'):
         embed.add_field(name='', value='\n'.join(items) if items else 'User has no items!', inline=False)
         embed.set_footer(text=f'Page {page}/{total_pages}')
         await ctx.send(embed=embed)
+
+    @commands.command(name='beg', description='beg for money', usage='beg')
+    @commands.cooldown(1, 60, commands.BucketType.user)
+    async def beg(self, ctx):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
+        amount = random.randint(100, 350)
+
+        user_data[ctx.author.id]['economy']['money']['wallet'] += amount
+        await ctx.send(f'You have begged for **{amount:,}**.')
+
+    @commands.command(name='shop', description='view the shop', usage='shop [page] [item]')
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def shop(self, ctx, page: Optional[int] = 1, item: Optional[str] = None):
+        if user_data[ctx.author.id]['is_banned']:
+            return
+
+        if item:
+
+            item = item.lower().strip()
+
+            if item not in constants.INVENTORY:
+                await ctx.send('That\'s not a valid item!')
+                return
+
+            item = constants.INVENTORY[item]
+            embed = discord.Embed(title=f'{item["emoji"]} {item["name"]}', description=item['description'], color=constants.random_color())
+            embed.add_field(name='Rarity', value=item['rarity'])
+            embed.add_field(name='Type', value=item['type'])
+            embed.add_field(name='Price', value=f'{item["price"]:,} coins', inline=False)
+            embed.add_field(name='Sell Price', value=f'{item["sell_price"]:,} coins' if item['sellable'] else 'Not Sellable', inline=False)
+            await ctx.send(embed=embed)
+
+        else:
+
+            total_pages = math.ceil(len(constants.INVENTORY) / 10)
+            page = page if page < total_pages else total_pages
+
+            embed = discord.Embed(title='Shop', description='**Items**', color=constants.random_color())
+            for i, item in enumerate(constants.INVENTORY):
+                if (page - 1) * 10 <= i < page * 10:
+                    item_dict = constants.INVENTORY[item]
+                    embed.add_field(name=f'**{item_dict["emoji"]} {item_dict["name"]}** `id: {item}`',
+                                    value=f'**Price:** {item_dict["price"]:,} coins', inline=False)
+            embed.set_footer(text=f'Page {page}/{total_pages}')
+            await ctx.send(embed=embed)
 
 
 async def setup(client):
