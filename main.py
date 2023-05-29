@@ -26,7 +26,7 @@ signal.signal(signal.SIGINT, terminate_handler)
 intents = discord.Intents.all()
 
 
-with open('client.token', 'r') as f:
+with open('client_token', 'r') as f:
     token = f.readline().strip()
 
 
