@@ -97,12 +97,12 @@ class Moderation(commands.Cog, name='moderation'):
             channel = ctx.channel
         if channel.id not in guild_data[ctx.guild.id]['antidelete']:
             guild_data[ctx.guild.id]['antidelete'].append(channel.id)
-            await ctx.channel.send('Turned on antidelete for this channel.')
+            await ctx.channel.send(f'Turned on antidelete for {channel.mention}.')
             if not guild_data[ctx.guild.id]['log']['antidelete']:
                 await ctx.channel.send('**WARNING: You currently do not have a log channel set up for antidelete yet.**\nRun `log <channel> antidelete` to set one up.')
         else:
             guild_data[ctx.guild.id]['antidelete'].remove(channel.id)
-            await ctx.channel.send('Turned off antidelete for this channel.')
+            await ctx.channel.send(f'Turned off antidelete for  {channel.mention}.')
 
     @commands.command(name='slowmode', aliases=['sm'], description='set custom slowmodes', usage='slowmode <time>')
     @commands.has_permissions(manage_channels=True)
@@ -141,8 +141,12 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.has_permissions(manage_channels=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def log(self, ctx, channel: discord.TextChannel, *, purpose: typing.Literal['antidelete'] = 'antidelete'):
-        guild_data[ctx.guild.id]['log'][purpose].append(channel.id)
-        await ctx.channel.send(f'Successfully setup {channel.mention} for logging.')
+        if channel.id not in guild_data[ctx.guild.id]['log'][purpose]:
+            guild_data[ctx.guild.id]['log'][purpose].append(channel.id)
+            await ctx.channel.send(f'Successfully setup {channel.mention} for logging.')
+        else:
+            guild_data[ctx.guild.id]['log'][purpose].remove(channel.id)
+            await ctx.channel.send(f'Successfully removed {channel.mention} from logging.')
 
 
 async def setup(client):
