@@ -52,7 +52,10 @@ class Basic(commands.Cog, name='basic'):
                 f'I do not have the permissions necessary to execute this command. Needed: {error.missing_perms}')
         elif error_type == commands.MissingRequiredArgument:
             await ctx.send(
-                f'```\n[Error] Missing Argument: {error}\n\n----- Usage is below -----\n{ctx.command.usage}\n\n\n* = optional field```')
+                f'```\n[Error] Missing Argument: {error}\n\n----- Usage is below -----\n{ctx.command.usage}\n\n\n[] = optional field```')
+        elif error_type == commands.BadLiteralArgument:
+            await ctx.send(
+                f'```\n[Error] Bad Literal Argument: Invalid value for "{str(error.param).split(":")[0]}"\n\nValid Values: {error.literals}\n\n----- Usage is below -----\n{ctx.command.usage}\n\n\n[] = optional field```')
         else:
             raise RuntimeError(f'Uncaught exception: {error_type.__name__}: {error_type}') from error
 

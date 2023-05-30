@@ -5,7 +5,7 @@ import ast
 
 GUILD_DATA = {'prefix': 'bot ',
               'antidelete': [],
-              'log': [], }
+              'log': {'antidelete': []}, }
 
 
 USER_DATA = {'economy':

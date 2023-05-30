@@ -1,5 +1,5 @@
 """Moderation Commands"""
-
+import typing
 
 import discord
 from discord.ext import commands
@@ -7,7 +7,7 @@ from discord.ext import commands
 import asyncio
 import string
 
-from file_storage import guild_data as config
+from file_storage import guild_data
 
 
 class Moderation(commands.Cog, name='moderation'):
@@ -17,12 +17,15 @@ class Moderation(commands.Cog, name='moderation'):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if message.channel.id in config[message.guild.id]['antidelete']:
-            if message.content[0] == '≪':
-                return
-            await message.channel.send(f'≪{message.author.mention}≫ {message.content}',
-                                       allowed_mentions=discord.AllowedMentions(everyone=False, users=False,
-                                                                                roles=False))
+        if message.channel.id in guild_data[message.guild.id]['antidelete']:
+            user = message.author
+            for i in guild_data[message.guild.id]['log']['antidelete']:
+                embed = discord.Embed(title='Message Deleted', color=discord.Color.red())
+                embed.set_author(name=user.name,
+                                 icon_url=user.avatar.url if user.avatar else user.default_avatar.url)
+                embed.add_field(name='Message', value=message.content, inline=False)
+                embed.add_field(name='Channel', value=message.channel.mention, inline=False)
+                await self.client.get_channel(i).send(embed=embed)
 
     @commands.command(name='prefix', description='change the prefix for the server', usage='prefix [prefix]')
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -32,12 +35,12 @@ class Moderation(commands.Cog, name='moderation'):
             await ctx.send('You may not have a prefix longer than 10 characters.')
             return
         if not msg or msg.lower() == 'bot':
-            config[ctx.guild.id]['prefix'] = 'bot '
+            guild_data[ctx.guild.id]['prefix'] = 'bot '
             await ctx.channel.send(f'Reset the prefix to `bot`.')
             return
         if msg[-1] not in string.punctuation and msg[-1] not in string.digits:
             msg += ' '
-        config[ctx.guild.id]['prefix'] = msg
+        guild_data[ctx.guild.id]['prefix'] = msg
         await ctx.channel.send(
             f'Successfully set the prefix to `{msg}`.\n\nIf your prefix ends with a symbol or number, you do not have '
             f'the add a space between the prefix and the command.')
@@ -86,15 +89,19 @@ class Moderation(commands.Cog, name='moderation'):
         await asyncio.sleep(1)
         await purged_msg.delete()
 
-    @commands.command(name='antidelete', description='make users unable to delete messages', usage='antidelete')
+    @commands.command(name='antidelete', description='make users unable to delete messages', usage='antidelete [channel]')
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def antidelete(self, ctx):
-        if ctx.channel.id not in config[ctx.guild.id]['antidelete']:
-            config[ctx.guild.id]['antidelete'].append(ctx.channel.id)
+    async def antidelete(self, ctx, channel: discord.TextChannel = None):
+        if channel is None:
+            channel = ctx.channel
+        if channel.id not in guild_data[ctx.guild.id]['antidelete']:
+            guild_data[ctx.guild.id]['antidelete'].append(channel.id)
             await ctx.channel.send('Turned on antidelete for this channel.')
+            if not guild_data[ctx.guild.id]['log']['antidelete']:
+                await ctx.channel.send('**WARNING: You currently do not have a log channel set up for antidelete yet.**\nRun `log <channel> antidelete` to set one up.')
         else:
-            config[ctx.guild.id]['antidelete'].remove(ctx.channel.id)
+            guild_data[ctx.guild.id]['antidelete'].remove(channel.id)
             await ctx.channel.send('Turned off antidelete for this channel.')
 
     @commands.command(name='slowmode', aliases=['sm'], description='set custom slowmodes', usage='slowmode <time>')
@@ -129,6 +136,13 @@ class Moderation(commands.Cog, name='moderation'):
             return
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
         await ctx.channel.send(f'Unlocked <#{ctx.channel.id}>.')
+        
+    @commands.command(name='log', description='set up a channel for logging', usage='log <channel> [purpose]')
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 2, commands.BucketType.user)
+    async def log(self, ctx, channel: discord.TextChannel, *, purpose: typing.Literal['antidelete'] = 'antidelete'):
+        guild_data[ctx.guild.id]['log'][purpose].append(channel.id)
+        await ctx.channel.send(f'Successfully setup {channel.mention} for logging.')
 
 
 async def setup(client):
