@@ -43,7 +43,6 @@ class ImageCog(commands.Cog, name='image'):
     @commands.command(name='ohnoes', description='Oh noes', usage='ohnoes <message>')
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def ohnoes(self, ctx, *, msg: str):
-        await ctx.send('a')
         image = Image.open('assets/ohnoes.png')
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 15)
