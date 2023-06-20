@@ -14,29 +14,30 @@ def help_categories(ls: list):
     return val_string
 
 
-def bend(w: int, s: str):
+def bend(text: str, count: int):
     """New Line after certain amount of characters"""
-    s = s.split(' ')
-    ls = filter(None, s)
-    new = []
-    i = 0
-    for word in ls:
-        line = new[i] + ' ' + word
-        if not new[i]:
-            line = word
-        if len(word) > w:
-            while len(word) > w:
-                new.append(word[:w])
-                i += 1
-                word = word[w:]
-            i += 1
-            new.append(word)
-        elif len(line) > w:
-            new.append(word)
-            i += 1
+    if len(text) <= count:
+        return text
+
+    text_list = filter(None, text.split(' '))
+    output = []
+    line = 0
+    for word in text_list:
+        if len(output) == line:
+            output.append(word)
+        elif len(output[line]) + len(word) > count:
+            line += 1
+            output.append(word)
         else:
-            new[i] = line
-    return '\n'.join(new)
+            output[line] += ' ' + word
+    for i, j in enumerate(output):
+        if len(j) > count:
+            output[i] = j[:count]
+            if i + 1 < len(output):
+                output[i + 1] = j[count:] + output[i + 1]
+            else:
+                output.append(j[count:])
+    return '\n'.join(output)
 
 
 def add_xp(user_id: int, xp: int, cooldown: bool = True):
