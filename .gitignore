@@ -1,6 +1,10 @@
 # the token should stay hidden
 client_token
 
+# bot outupt files
+_clippy.png
+_ohnoes.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
