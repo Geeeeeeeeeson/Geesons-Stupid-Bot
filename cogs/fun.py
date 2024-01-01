@@ -41,18 +41,5 @@ class Fun(commands.Cog, name='fun'):
     async def backwards(self, ctx, *, msg):
         await ctx.send(msg[::-1])
 
-    @commands.command(name='impostor',
-                      description='this commands sends a webhook with the other users name and profile picture',
-                      usage='impostor <user> <message>')
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    async def impostor(self, ctx, i_user: discord.User, *, msg):
-        hooks = await ctx.channel.webhooks()
-        hook = discord.utils.get(hooks, name='Geeson\'s Stupid Bot')
-        if hook is None:
-            hook = await ctx.channel.create_webhook(name='Geeson\'s Stupid Bot', avatar=None, reason=None)
-        await hook.send(content=msg, username=i_user.name, avatar_url=i_user.avatar.url if i_user.avatar else i_user.default_avatar.url)
-        await ctx.message.delete()
-
-
 async def setup(client):
     await client.add_cog(Fun(client))

@@ -4,14 +4,11 @@
 import discord
 from discord.ext import commands
 
-import os
-
 import art
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-import file_storage
 import utils
 
 

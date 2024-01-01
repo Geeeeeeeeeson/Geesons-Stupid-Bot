@@ -31,15 +31,15 @@ class Moderation(commands.Cog, name='moderation'):
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx, *, msg: str = ''):
-        if len(msg) > 10:
-            await ctx.send('You may not have a prefix longer than 10 characters.')
-            return
         if not msg or msg.lower() == 'bot':
             guild_data[ctx.guild.id]['prefix'] = 'bot '
             await ctx.channel.send(f'Reset the prefix to `bot`.')
             return
         if msg[-1] not in string.punctuation and msg[-1] not in string.digits:
             msg += ' '
+        if len(msg) > 10:
+            await ctx.send('You may not have a prefix longer than 10 characters.')
+            return
         guild_data[ctx.guild.id]['prefix'] = msg
         await ctx.channel.send(
             f'Successfully set the prefix to `{msg}`.\n\nIf your prefix ends with a symbol or number, you do not have '
